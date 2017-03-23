@@ -41,13 +41,32 @@ public class UserApplication extends Application {
 	{
 		try 
 		{
-			createTable();
-			BorderPane mainLayout = new BorderPane();
-			mainLayout.setPadding(new Insets(0,20,0,0)); // margines z prawej strony
 			
-			VBox rightLayout = new VBox(); //opakowuje tablice
-			rightLayout.getChildren().add(table);
+			BorderPane mainLayout = new BorderPane();
+			BorderPane rightLayout = new BorderPane(); // prawa czesc okna, wzgledem, ktorej wyznaczane sa marginesy
+			rightLayout.setPadding(new Insets(20, 20, 20 ,20)); 
 			mainLayout.setRight(rightLayout);
+			
+			FlowPane rightBox = new FlowPane(); //opakowuje tablice
+			rightBox.setPadding(new Insets(20, 20, 20 ,20));
+			rightBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+			rightBox.setVgap(20);
+			rightBox.setHgap(20);
+			rightLayout.setCenter(rightBox);
+			
+			Label patientData = new Label("Dane Pacjentów");
+			rightBox.getChildren().add(patientData);
+			
+			ScrollPane scrollCont = new ScrollPane();
+			createTable();
+			scrollCont.setContent(table);
+			rightBox.getChildren().add(scrollCont);
+			
+			Button addButton = new Button("Dodaj");
+	        Button deleteButton = new Button("Usuñ");
+	        rightBox.getChildren().add(addButton);
+	        rightBox.getChildren().add(deleteButton);
 			
 			BorderPane leftLayout = new BorderPane(); // opakowuje dwa obszary po lewej stronie
 			leftLayout.setMinSize(300,400);
@@ -62,7 +81,6 @@ public class UserApplication extends Application {
 	        formGrid.setAlignment(Pos.TOP_CENTER);
 	        formGrid.setHgap(20);
 	        formGrid.setVgap(10);
-	        //formGrid.setGridLinesVisible(true);
 	        
 	        Text formTitle = new Text("Dane Pacjenta");
 	        formGrid.add(formTitle, 0, 0, 2, 1);
@@ -105,13 +123,56 @@ public class UserApplication extends Application {
 	        formGrid.add(insuranceType, 3, 5, 2, 1);
 	        insuranceType.getItems().addAll("NFZ","Prywatne","Brak");
 	        insuranceType.getSelectionModel().selectFirst();
+	        
 	        Button saveButton = new Button("Zapisz");
 	        Button clearButton = new Button("Anuluj");
-	        
 	        formGrid.add(saveButton, 0, 6);
 	        formGrid.add(clearButton, 1, 6);
-	        
+	      
 			leftLayout.setTop(formGrid);
+			
+			GridPane examGrid = new GridPane();
+			examGrid.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+			examGrid.setMinSize(260, 200);
+			examGrid.setPadding(new Insets(20, 20, 20 ,20));
+	        examGrid.setAlignment(Pos.TOP_CENTER);
+	        examGrid.setHgap(20);
+	        examGrid.setVgap(10);
+	        
+	        Label exam = new Label("Badanie");
+	        examGrid.add(exam, 0, 0, 2, 1);
+	        
+	        Label date = new Label("Data");
+	        examGrid.add(date, 0, 1, 2, 1);
+	        DatePicker calendar =  new DatePicker();
+	        examGrid.add(calendar, 2, 1, 3, 1);
+	        
+	        Label antigenHBS = new Label("Antygen HBS");
+	        examGrid.add(antigenHBS, 0, 2, 2, 1);
+	        CheckBox checkHBS = new CheckBox();
+	        examGrid.add(checkHBS, 2, 2);
+	        
+	        Label antiBodiesHCV = new Label("Przeciwcia³a HCV");
+	        examGrid.add(antiBodiesHCV, 0, 3, 2, 1);
+	        CheckBox checkHCV = new CheckBox();
+	        examGrid.add(checkHCV, 2, 3);
+	        
+	        Label bilirubin = new Label("Poziom Bilirubiny");
+	        examGrid.add(bilirubin, 0, 4, 2, 1);
+	        TextField bilirubinLevel = new TextField();
+	        bilirubinLevel.setPrefWidth(60);
+	        examGrid.add(bilirubinLevel, 2, 4);
+	        Label unit = new Label("mg/dl");
+	        examGrid.add(unit, 3, 4);
+	        
+	        Button saveButtonExam = new Button("Zapisz");
+	        Button clearButtonExam = new Button("Anuluj");
+	        examGrid.add(saveButtonExam, 0, 5);
+	        examGrid.add(clearButtonExam, 1, 5);
+	        
+	        leftLayout.setBottom(examGrid);
+	        
 			menuItem.setOnAction(e->
 			{
 				
@@ -124,7 +185,7 @@ public class UserApplication extends Application {
 			
 			mainLayout.setTop(menuBar);
 		
-			Scene scene = new Scene(mainLayout, 1200, 500);
+			Scene scene = new Scene(mainLayout, 1200, 560);
 			primaryStage.setTitle("Rejestracja wyników badañ");
 			primaryStage.setScene(scene);
 			primaryStage.show();		
@@ -184,12 +245,12 @@ public class UserApplication extends Application {
 		idColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("id"));
 		
 		TableColumn<UserData, String> insuranceColumn = new TableColumn<>("Ubezpieczenie");
-		insuranceColumn.setMinWidth(200);
+		insuranceColumn.setMinWidth(150);
 		insuranceColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("insurance"));
   
          table.setItems(model.userObservableList);
          table.getColumns().addAll(fullNameColumn, sexColumn, idColumn, insuranceColumn, examinationColumn );
-         table.setPrefHeight(200);
+         table.setPrefHeight(100);
          table.setTableMenuButtonVisible(true);
     
          
