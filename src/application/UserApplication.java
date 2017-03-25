@@ -27,10 +27,6 @@ public class UserApplication extends Application {
 	public Model model = new Model();
 	public Controller controller = new Controller();
 	
-
-	
-	
-
 	
 	@Override
 	/*
@@ -68,7 +64,7 @@ public class UserApplication extends Application {
 	        rightBox.getChildren().add(addButton);
 	        rightBox.getChildren().add(deleteButton);
 			
-			BorderPane leftLayout = new BorderPane(); // opakowuje dwa obszary po lewej stronie
+			BorderPane leftLayout = new BorderPane(); //opakowuje dwa obszary po lewej stronie
 			leftLayout.setMinSize(300,400);
 			leftLayout.setPadding(new Insets(20, 20, 20 ,20));
 			mainLayout.setLeft(leftLayout);
@@ -85,7 +81,6 @@ public class UserApplication extends Application {
 	        Text formTitle = new Text("Dane Pacjenta");
 	        formGrid.add(formTitle, 0, 0, 2, 1);
 	    
-
 	        Label name = new Label("Imiê:");
 	        formGrid.add(name, 0, 1, 2, 1);
 
@@ -128,6 +123,9 @@ public class UserApplication extends Application {
 	        Button clearButton = new Button("Anuluj");
 	        formGrid.add(saveButton, 0, 6);
 	        formGrid.add(clearButton, 1, 6);
+	        
+	        Label error = new Label("");
+	        formGrid.add(error, 1, 7);
 	      
 			leftLayout.setTop(formGrid);
 			
@@ -184,11 +182,25 @@ public class UserApplication extends Application {
 			menuBar.getMenus().add(menu);
 			
 			mainLayout.setTop(menuBar);
-		
-			Scene scene = new Scene(mainLayout, 1200, 560);
+			
+			saveButton.setOnAction(e-> handleOptions(femaleCheck, maleCheck, insuranceType, nameTextField, surnameTextField, peselTextField, error));
+			clearButton.setOnAction(e->
+			{
+				nameTextField.clear();
+				surnameTextField.clear();
+				peselTextField.clear();
+				femaleCheck.setSelected(false);
+				maleCheck.setSelected(false);
+				insuranceType.getSelectionModel().selectFirst();
+				error.setText("");
+				
+			});
+			
+			Scene scene = new Scene(mainLayout, 1400, 650);
 			primaryStage.setTitle("Rejestracja wyników badañ");
 			primaryStage.setScene(scene);
-			primaryStage.show();		
+			primaryStage.show();
+			primaryStage.setResizable(false);
 			
 		}
 		catch(Exception e) 
@@ -197,7 +209,85 @@ public class UserApplication extends Application {
 		}
 	}
 	
+	/**
+	 * Funkcja do obslugi przycisku "Zapisz" w panelu danych pacjenta
+	 * @param femaleCheck
+	 * @param maleCheck
+	 * @param insuranceType
+	 * @param name
+	 * @param surname
+	 * @param pesel
+	 */
+	private void handleOptions(RadioButton femaleCheck, RadioButton maleCheck, ComboBox<String> insuranceType,
+			TextField  nameTextField, TextField  surnameTextField, TextField peselTextField, Label error)
+	{
+		String name = nameTextField.getText();
+		String surname = surnameTextField.getText();
+		String pesel = peselTextField.getText();
+		error.setText("");
+		String sex = "";
+		String insurance = "";
+		boolean response = true;
+		
+		if(femaleCheck.isSelected())
+		{
+			sex = "K";
+		}
+		else if(maleCheck.isSelected())
+		{
+			sex = "M";
+		}
+		else
+		{
+			response = false;
+		}
+		
+	    
+	   if(response)
+	   {
+		   String value = insuranceType.getValue();
+			
+			if(value.equals("NFZ"))
+			{
+				insurance = "NFZ";
+			}
+			else if(value.equals("Prywatne"))
+			{
+				insurance = "Prywatne";
+			}
+			else
+			{
+				insurance = "Brak";
+			}
+			
+		   response = controller.saveUser(name, surname, pesel, sex, insurance);
+		   table.setItems(Model.userObservableList);
+	   }
+		  
+	   if(!response)
+	   {
+		   error.setText("B³¹d !");
+		   error.setTextFill(Color.RED);
+	   }
+	   else
+	   {
+	   
+	   	nameTextField.clear();
+		surnameTextField.clear();
+		peselTextField.clear();
+		femaleCheck.setSelected(false);
+		maleCheck.setSelected(false);
+		insuranceType.getSelectionModel().selectFirst();
+		error.setText("");
+		
+	   }
+	 	
+	}
+	
 	@SuppressWarnings("unchecked")
+	/**
+	 * Funkcja tworzaca tabele
+	 */
 	private void createTable()
 	{
 		@SuppressWarnings("rawtypes")
@@ -206,7 +296,6 @@ public class UserApplication extends Application {
 		examinationColumn.setCellValueFactory(new Callback<CellDataFeatures<UserData, CheckBox>, ObservableValue<CheckBox>>() 
 		{
 			
-
              @Override
              public ObservableValue<CheckBox> call(CellDataFeatures<UserData, CheckBox> arg0) 
              {
@@ -216,9 +305,9 @@ public class UserApplication extends Application {
                  
                  UserData userData = arg0.getValue();
                  
-                 for (int i = 0; i < model.userObservableList.size(); i++)
+                 for (int i = 0; i < Model.userObservableList.size(); i++)
                  {
-                     if(userData.getExamination())
+                     if(userData.isExamination())
                      {
                          checkBox.selectedProperty().setValue(Boolean.TRUE);
                      }
@@ -226,12 +315,11 @@ public class UserApplication extends Application {
                  }
 
                  return new SimpleObjectProperty<CheckBox>(checkBox);
-        		}
-         
-         
+        		}        
          });
 		
-				
+		model.deserializeData();
+		
 		TableColumn<UserData, String> fullNameColumn = new TableColumn<>("Imiê i nazwisko");
 		fullNameColumn.setMinWidth(200);
 		fullNameColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("fullName"));
@@ -248,19 +336,12 @@ public class UserApplication extends Application {
 		insuranceColumn.setMinWidth(150);
 		insuranceColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("insurance"));
   
-         table.setItems(model.userObservableList);
-         table.getColumns().addAll(fullNameColumn, sexColumn, idColumn, insuranceColumn, examinationColumn );
-         table.setPrefHeight(100);
-         table.setTableMenuButtonVisible(true);
-    
+        table.setItems(Model.userObservableList);
+        Model.userObservableList.toString();
+        table.getColumns().addAll(fullNameColumn, sexColumn, idColumn, insuranceColumn, examinationColumn );
+        table.setPrefHeight(100);
+        table.setTableMenuButtonVisible(true);
          
-         table.setOnMouseClicked(e->
-         {
-        	 
-                UserData userData =   table.getSelectionModel().getSelectedItem();
-               // content.setText(user.getUserName());
-              
-        });
     }
 	
 	public static void main(String[] args)

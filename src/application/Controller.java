@@ -1,29 +1,17 @@
 package application;
 
-public class Controller {
-	/**
-	 * Publiczna metoda do pobierania informacji
-	 * @param data
-	 */
-	public String getData(String data)
-	{
-		String info = "";
-		
-		if(isInt(data))
-		{
-			info = Model.addOne(data);
-		}
-		else
-		{
-			info = "B³êdna dana";
-		}
-		
-		return info;
-	}
+import java.util.regex.Pattern;
 
+public class Controller 
+{
+
+	/**
+	 * Nowy obiekt klasy Model
+	 */
+	Model model = new Model();
 	
 	/**
-	 * Funkcja sprawdza czy string jest liczba calkowita
+	 * Funkcja zwraca prawde, gdy string jest liczba calkowita
 	 * @param string
 	 * @return
 	 */
@@ -34,7 +22,7 @@ public class Controller {
 		try
 		{
 			
-		Integer.parseInt(string);
+		Long.parseLong(string);
 		
 		}
 		catch(NumberFormatException e)
@@ -42,6 +30,48 @@ public class Controller {
 			info = false;
 		}
 		
+		return info;
+	}
+	
+	
+	/**
+	 * Zwraca prawde gdy string zawiera tylko duze i male litery
+	 * @param value
+	 * @return
+	 */
+	public boolean isName(String value)
+	{
+		boolean info = true;
+		
+		if(!Pattern.matches("[a-zA-Z]+", value))
+			info = false;
+			
+			return info;
+	}
+	
+	/**
+	 * Funkcja sluzaca do zapisu uzytkownika, zwraca prawde gdy dane sa poprawnie wprowadzone
+	 * @param name
+	 * @param surname
+	 * @param id
+	 * @param sex
+	 * @param insurance
+	 */
+	boolean saveUser(String name, String surname, String id, String sex, String insurance)
+	{
+		boolean info = true;
+		
+		if(!(isName(name) && isName(surname) && isInt(id) && model.checkId(id)&& id.length() == 11))
+		{
+			info = false;
+			
+		}
+		else
+		{
+			   
+		   model.saveInfo(name, surname, id, sex, insurance);
+		}
+				
 		return info;
 	}
 	
