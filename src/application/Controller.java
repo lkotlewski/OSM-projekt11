@@ -43,7 +43,7 @@ public class Controller
 	{
 		boolean info = true;
 		
-		if(!Pattern.matches("[a-zA-Z]+", value))
+		if(!Pattern.matches("[A-Za-z¿Ÿæñó³ê¹œ¯Æ¥ŒÊ£ÓÑ]*", value))
 			info = false;
 			
 			return info;
