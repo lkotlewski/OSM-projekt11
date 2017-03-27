@@ -22,7 +22,7 @@ public class UserApplication extends Application {
 	 */
 	public Menu menu = new Menu("Aplikacja");
 	public MenuBar menuBar = new MenuBar();
-	public MenuItem menuItem = new MenuItem("Wyjœcie");
+	public MenuItem menuItem = new MenuItem("WyjÅ“cie");
 	public TableView<UserData> table  = new TableView<UserData>();
 	public Model model = new Model();
 	public Controller controller = new Controller();
@@ -51,7 +51,7 @@ public class UserApplication extends Application {
 			rightBox.setHgap(20);
 			rightLayout.setCenter(rightBox);
 			
-			Label patientData = new Label("Dane Pacjentów");
+			Label patientData = new Label("Dane PacjentÃ³w");
 			rightBox.getChildren().add(patientData);
 			
 			ScrollPane scrollCont = new ScrollPane();
@@ -60,7 +60,7 @@ public class UserApplication extends Application {
 			rightBox.getChildren().add(scrollCont);
 			
 			Button addButton = new Button("Dodaj");
-	        Button deleteButton = new Button("Usuñ");
+	        Button deleteButton = new Button("UsuÅ„");
 	        rightBox.getChildren().add(addButton);
 	        rightBox.getChildren().add(deleteButton);
 			
@@ -81,7 +81,7 @@ public class UserApplication extends Application {
 	        Text formTitle = new Text("Dane Pacjenta");
 	        formGrid.add(formTitle, 0, 0, 2, 1);
 	    
-	        Label name = new Label("Imiê:");
+	        Label name = new Label("ImiÄ™:");
 	        formGrid.add(name, 0, 1, 2, 1);
 
 	        TextField nameTextField = new TextField();
@@ -99,12 +99,12 @@ public class UserApplication extends Application {
 	        TextField peselTextField = new TextField();
 	        formGrid.add(peselTextField, 2, 3, 2, 1);
 	        
-	        Label sex = new Label("P³eæ:");
+	        Label sex = new Label("PÅ‚eÄ‡:");
 	        formGrid.add(sex, 0, 4, 2, 1);
 	        
 	       
 	        RadioButton femaleCheck = new RadioButton("Kobieta");
-	        RadioButton maleCheck = new RadioButton("Mê¿czyzna");
+	        RadioButton maleCheck = new RadioButton("MÄ™Å¼czyzna");
 	        formGrid.add(femaleCheck, 2, 4);
 	        formGrid.add(maleCheck, 3, 4);
 	        ToggleGroup sexGroup = new ToggleGroup();
@@ -151,7 +151,7 @@ public class UserApplication extends Application {
 	        CheckBox checkHBS = new CheckBox();
 	        examGrid.add(checkHBS, 2, 2);
 	        
-	        Label antiBodiesHCV = new Label("Przeciwcia³a HCV");
+	        Label antiBodiesHCV = new Label("PrzeciwciaÅ‚a HCV");
 	        examGrid.add(antiBodiesHCV, 0, 3, 2, 1);
 	        CheckBox checkHCV = new CheckBox();
 	        examGrid.add(checkHCV, 2, 3);
@@ -197,7 +197,7 @@ public class UserApplication extends Application {
 			});
 			
 			Scene scene = new Scene(mainLayout, 1400, 650);
-			primaryStage.setTitle("Rejestracja wyników badañ");
+			primaryStage.setTitle("Rejestracja wynikÃ³w badaÃ±");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			primaryStage.setResizable(false);
@@ -239,39 +239,35 @@ public class UserApplication extends Application {
 		}
 		else
 		{
-			response = false;
+			sex = null;
+		}   
+	  
+		String value = insuranceType.getValue();
+			
+		if(value.equals("NFZ"))
+		{
+			insurance = "NFZ";
 		}
-		
-	    
-	   if(response)
-	   {
-		   String value = insuranceType.getValue();
+		else if(value.equals("Prywatne"))
+		{
+			insurance = "Prywatne";
+		}
+		else
+		{
+			insurance = "Brak";
+		}
 			
-			if(value.equals("NFZ"))
-			{
-				insurance = "NFZ";
-			}
-			else if(value.equals("Prywatne"))
-			{
-				insurance = "Prywatne";
-			}
-			else
-			{
-				insurance = "Brak";
-			}
-			
-		   response = controller.saveUser(name, surname, pesel, sex, insurance);
-		   table.setItems(Model.userObservableList);
-	   }
+		   response = controller.saveUser(name, surname, pesel, sex, insurance);	   
 		  
 	   if(!response)
 	   {
-		   error.setText("B³¹d !");
+		   error.setText("BÅ‚Ä…d !");
 		   error.setTextFill(Color.RED);
 	   }
 	   else
 	   {
 	   
+		table.setItems(Model.userObservableList);
 	   	nameTextField.clear();
 		surnameTextField.clear();
 		peselTextField.clear();
@@ -320,11 +316,11 @@ public class UserApplication extends Application {
 		
 		model.deserializeData();
 		
-		TableColumn<UserData, String> fullNameColumn = new TableColumn<>("Imiê i nazwisko");
+		TableColumn<UserData, String> fullNameColumn = new TableColumn<>("ImiÃª i nazwisko");
 		fullNameColumn.setMinWidth(200);
 		fullNameColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("fullName"));
 		
-		TableColumn<UserData, String> sexColumn = new TableColumn<>("P³eæ");
+		TableColumn<UserData, String> sexColumn = new TableColumn<>("PÂ³eÃ¦");
 		sexColumn.setMinWidth(50);
 		sexColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("sex"));
 		

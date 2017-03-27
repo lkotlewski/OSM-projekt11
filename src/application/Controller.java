@@ -61,10 +61,10 @@ public class Controller
 	{
 		boolean info = true;
 		
-		if(!(isName(name) && isName(surname) && isInt(id) && model.checkId(id)&& id.length() == 11))
+		if(!(isName(name) && isName(surname) && isInt(id) && model.checkId(id)&& id.length() == 11 && sex != null))
 		{
 			info = false;
-			
+		
 		}
 		else
 		{
