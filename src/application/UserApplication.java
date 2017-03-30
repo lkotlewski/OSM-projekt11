@@ -20,14 +20,51 @@ public class UserApplication extends Application {
 	/**
 	 * Przyciks button odpowiedzialny za...
 	 */
-	public Menu menu = new Menu("Aplikacja");
-	public MenuBar menuBar = new MenuBar();
-	public MenuItem menuItem = new MenuItem("WyjÅ“cie");
-	public TableView<UserData> table  = new TableView<UserData>();
-	public Model model = new Model();
-	public Controller controller = new Controller();
-	
-	
+    Menu menu = new Menu("Aplikacja");
+    MenuBar menuBar = new MenuBar();
+	MenuItem menuItem = new MenuItem("Wyjœcie");
+    TableView<UserData> table  = new TableView<UserData>();
+	Model model = new Model();
+	Controller controller = new Controller();
+    BorderPane mainLayout = new BorderPane();
+    BorderPane rightLayout = new BorderPane(); // opakowanie na tablice z danymi
+    BorderPane leftLayout = new BorderPane(); // Opakowanie na dwa formularze do wprowadzania danych
+    GridPane formGrid = new GridPane();    // Czesc odpowiedzialna za formularz z danymi
+    GridPane examGrid = new GridPane();
+    FlowPane rightBox = new FlowPane(); // prawa czesc okna, wzgledem, ktorej wyznaczane sa marginesy
+    ScrollPane scrollCont = new ScrollPane();
+    Label patientData = new Label("Dane Pacjentów");
+	Button addButton = new Button("Dodaj");
+    Button deleteButton = new Button("Usuñ");
+    Text formTitle = new Text("Dane Pacjenta");
+    Label name = new Label("Imiê:");
+    TextField nameTextField = new TextField();
+    Label surname = new Label("Nazwisko:");
+    TextField surnameTextField = new TextField();
+    Label pesel = new Label("PESEL:");
+    TextField peselTextField = new TextField();
+    Label sex = new Label("P³eæ:");
+    RadioButton femaleCheck = new RadioButton("Kobieta");
+    RadioButton maleCheck = new RadioButton("Mê¿czyzna");
+    ToggleGroup sexGroup = new ToggleGroup();
+    Label insurance = new Label("Ubezpieczenie");
+    ComboBox<String> insuranceType = new ComboBox<String>();
+    Button saveButton = new Button("Zapisz");
+    Button clearButton = new Button("Anuluj");
+    Label error = new Label("");
+    Label exam = new Label("Badanie");
+    Label date = new Label("Data");
+    DatePicker calendar =  new DatePicker();
+    Label antigenHBS = new Label("Antygen HBS");
+    CheckBox checkHBS = new CheckBox();
+    Label antiBodiesHCV = new Label("Przeciwcia³a HCV");
+    CheckBox checkHCV = new CheckBox();
+    Label bilirubin = new Label("Poziom Bilirubiny");
+    TextField bilirubinLevel = new TextField();
+    Label unit = new Label("mg/dl");
+    Button saveButtonExam = new Button("Zapisz");
+    Button clearButtonExam = new Button("Anuluj");
+    
 	@Override
 	/*
 	 * (non-Javadoc)
@@ -37,13 +74,19 @@ public class UserApplication extends Application {
 	{
 		try 
 		{
-			
-			BorderPane mainLayout = new BorderPane();
-			BorderPane rightLayout = new BorderPane(); // prawa czesc okna, wzgledem, ktorej wyznaczane sa marginesy
+			/**
+			 * Gora
+			 */
+		    menu.getItems().add(menuItem);
+			menuBar.getMenus().add(menu);
+			mainLayout.setTop(menuBar);
+		    
+			/**
+			 * Prawa strona
+			 */
 			rightLayout.setPadding(new Insets(20, 20, 20 ,20)); 
 			mainLayout.setRight(rightLayout);
 			
-			FlowPane rightBox = new FlowPane(); //opakowuje tablice
 			rightBox.setPadding(new Insets(20, 20, 20 ,20));
 			rightBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
 					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -51,25 +94,21 @@ public class UserApplication extends Application {
 			rightBox.setHgap(20);
 			rightLayout.setCenter(rightBox);
 			
-			Label patientData = new Label("Dane PacjentÃ³w");
 			rightBox.getChildren().add(patientData);
 			
-			ScrollPane scrollCont = new ScrollPane();
 			createTable();
 			scrollCont.setContent(table);
 			rightBox.getChildren().add(scrollCont);
-			
-			Button addButton = new Button("Dodaj");
-	        Button deleteButton = new Button("UsuÅ„");
 	        rightBox.getChildren().add(addButton);
 	        rightBox.getChildren().add(deleteButton);
 			
-			BorderPane leftLayout = new BorderPane(); //opakowuje dwa obszary po lewej stronie
+	        /**
+	         * Lewa strona
+	         */
 			leftLayout.setMinSize(300,400);
 			leftLayout.setPadding(new Insets(20, 20, 20 ,20));
 			mainLayout.setLeft(leftLayout);
-			
-			GridPane formGrid = new GridPane();
+		
 			formGrid.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
 					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 			formGrid.setMinSize(260, 240);
@@ -78,58 +117,31 @@ public class UserApplication extends Application {
 	        formGrid.setHgap(20);
 	        formGrid.setVgap(10);
 	        
-	        Text formTitle = new Text("Dane Pacjenta");
 	        formGrid.add(formTitle, 0, 0, 2, 1);
-	    
-	        Label name = new Label("ImiÄ™:");
 	        formGrid.add(name, 0, 1, 2, 1);
-
-	        TextField nameTextField = new TextField();
 	        formGrid.add(nameTextField, 2, 1, 2, 1);
-	        
-	        Label surname = new Label("Nazwisko:");
 	        formGrid.add(surname, 0, 2, 2, 1);
-
-	        TextField surnameTextField = new TextField();
 	        formGrid.add(surnameTextField, 2, 2, 2, 1);
-	        
-	        Label pesel = new Label("PESEL:");
 	        formGrid.add(pesel, 0, 3, 2, 1);
-
-	        TextField peselTextField = new TextField();
 	        formGrid.add(peselTextField, 2, 3, 2, 1);
-	        
-	        Label sex = new Label("PÅ‚eÄ‡:");
 	        formGrid.add(sex, 0, 4, 2, 1);
-	        
-	       
-	        RadioButton femaleCheck = new RadioButton("Kobieta");
-	        RadioButton maleCheck = new RadioButton("MÄ™Å¼czyzna");
 	        formGrid.add(femaleCheck, 2, 4);
 	        formGrid.add(maleCheck, 3, 4);
-	        ToggleGroup sexGroup = new ToggleGroup();
+	        formGrid.add(insurance, 0, 5, 2, 1);
+	        formGrid.add(insuranceType, 3, 5, 2, 1);
+	        formGrid.add(saveButton, 0, 6);
+	        formGrid.add(clearButton, 1, 6);
+	        formGrid.add(error, 1, 7);
+	        
 	        femaleCheck.setToggleGroup(sexGroup);
 	        maleCheck.setToggleGroup(sexGroup);
 	        
-	        Label insurance = new Label("Ubezpieczenie");
-	        formGrid.add(insurance, 0, 5, 2, 1);
-	        
-	        ComboBox<String> insuranceType = new ComboBox<String>();
-	        formGrid.add(insuranceType, 3, 5, 2, 1);
 	        insuranceType.getItems().addAll("NFZ","Prywatne","Brak");
 	        insuranceType.getSelectionModel().selectFirst();
-	        
-	        Button saveButton = new Button("Zapisz");
-	        Button clearButton = new Button("Anuluj");
-	        formGrid.add(saveButton, 0, 6);
-	        formGrid.add(clearButton, 1, 6);
-	        
-	        Label error = new Label("");
-	        formGrid.add(error, 1, 7);
-	      
+
 			leftLayout.setTop(formGrid);
 			
-			GridPane examGrid = new GridPane();
+			
 			examGrid.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
 					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 			examGrid.setMinSize(260, 200);
@@ -138,77 +150,131 @@ public class UserApplication extends Application {
 	        examGrid.setHgap(20);
 	        examGrid.setVgap(10);
 	        
-	        Label exam = new Label("Badanie");
 	        examGrid.add(exam, 0, 0, 2, 1);
-	        
-	        Label date = new Label("Data");
 	        examGrid.add(date, 0, 1, 2, 1);
-	        DatePicker calendar =  new DatePicker();
 	        examGrid.add(calendar, 2, 1, 3, 1);
-	        
-	        Label antigenHBS = new Label("Antygen HBS");
 	        examGrid.add(antigenHBS, 0, 2, 2, 1);
-	        CheckBox checkHBS = new CheckBox();
 	        examGrid.add(checkHBS, 2, 2);
-	        
-	        Label antiBodiesHCV = new Label("PrzeciwciaÅ‚a HCV");
 	        examGrid.add(antiBodiesHCV, 0, 3, 2, 1);
-	        CheckBox checkHCV = new CheckBox();
 	        examGrid.add(checkHCV, 2, 3);
-	        
-	        Label bilirubin = new Label("Poziom Bilirubiny");
 	        examGrid.add(bilirubin, 0, 4, 2, 1);
-	        TextField bilirubinLevel = new TextField();
 	        bilirubinLevel.setPrefWidth(60);
 	        examGrid.add(bilirubinLevel, 2, 4);
-	        Label unit = new Label("mg/dl");
 	        examGrid.add(unit, 3, 4);
-	        
-	        Button saveButtonExam = new Button("Zapisz");
-	        Button clearButtonExam = new Button("Anuluj");
 	        examGrid.add(saveButtonExam, 0, 5);
 	        examGrid.add(clearButtonExam, 1, 5);
+	        examGrid.setDisable(true);
 	        
 	        leftLayout.setBottom(examGrid);
 	        
-			menuItem.setOnAction(e->
-			{
-				
-				primaryStage.close();
-				
-			});
-			
-			menu.getItems().add(menuItem);
-			menuBar.getMenus().add(menu);
-			
-			mainLayout.setTop(menuBar);
-			
-			saveButton.setOnAction(e-> handleOptions(femaleCheck, maleCheck, insuranceType, nameTextField, surnameTextField, peselTextField, error));
-			clearButton.setOnAction(e->
-			{
-				nameTextField.clear();
-				surnameTextField.clear();
-				peselTextField.clear();
-				femaleCheck.setSelected(false);
-				maleCheck.setSelected(false);
-				insuranceType.getSelectionModel().selectFirst();
-				error.setText("");
-				
-			});
-			
-			Scene scene = new Scene(mainLayout, 1400, 650);
-			primaryStage.setTitle("Rejestracja wynikÃ³w badaÃ±");
+	        /**
+	         * ustawienia odnoszace sie do calego okna programu
+	         */
+	        Scene scene = new Scene(mainLayout, 1400, 600);
+			primaryStage.setTitle("Rejestracja wyników badañ");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			primaryStage.setResizable(false);
 			
+	        /**
+	         * Obsluga zdarzen z calego programu
+	         */
+	        
+			menuItem.setOnAction(e->
+			{
+				primaryStage.close();
+				
+			});
+			
+			saveButton.setOnMouseClicked(e-> 
+			{
+				handleOptions(femaleCheck, maleCheck, insuranceType,
+				nameTextField, surnameTextField, peselTextField, error);
+			});
+			
+			clearButton.setOnMouseClicked(e->
+			{
+				clearFormGrid();
+			});
+			
+			table.setOnMouseClicked(e->
+			{
+				examGrid.setDisable(false);
+				int selectedRow = table.getSelectionModel().getSelectedIndex();
+				UserData userData = Model.userObservableList.get(selectedRow);
+				nameTextField.setText(Model.userObservableList.get(selectedRow).getName());
+				surnameTextField.setText(userData.getSurname());
+				peselTextField.setText(userData.getId());
+				femaleCheck.setSelected(userData.getSex().equals("K"));
+                maleCheck.setSelected(userData.getSex().equals("M"));
+				
+				if(userData.getInsurance().equals("NFZ"))
+					insuranceType.getSelectionModel().selectFirst();
+				else if(userData.getInsurance().equals("Prywatne"))
+					insuranceType.getSelectionModel().select(1);
+				else if(userData.getInsurance().equals("Brak"))
+					insuranceType.getSelectionModel().select(2);
+				
+				if(userData.isExamination()){
+					ExamData examData = Model.patientExamMap.get(userData.getId());
+					System.out.println(examData.getExamDate());
+					calendar.setValue(examData.getExamDate());
+					System.out.println(examData.isAntigenHBS());
+					checkHBS.setSelected(examData.isAntigenHBS());
+					checkHCV.setSelected(examData.isAntiBodiesHCV());
+					bilirubinLevel.setText(String.valueOf(examData.getBilirubinLevel()));
+				}
+				else{
+					clearExamGrid();
+				}
+			});
+			
+			addButton.setOnMouseClicked(e->
+			{
+				clearFormGrid();
+				clearExamGrid();
+			});
+			
+			clearButtonExam.setOnMouseClicked(e->
+			{
+				clearExamGrid();
+			});
+			
+			saveButtonExam.setOnMouseClicked(e->{
+				controller.saveExamResults(bilirubinLevel.getText(), checkHCV.isSelected(),
+				checkHBS.isSelected(), calendar.getValue(),table.getSelectionModel().getSelectedIndex());
+				clearExamGrid();
+			});
+			
+			formGrid.setOnMouseClicked(e->
+			{
+				examGrid.setDisable(true);
+				table.getSelectionModel().select(null);
+				e.consume();
+			});
+			
+			primaryStage.setOnCloseRequest(e-> model.serializeData());
 		}
 		catch(Exception e) 
 		{
 			e.printStackTrace();
 		}
 	}
-	
+	private void clearFormGrid(){
+		nameTextField.clear();
+		surnameTextField.clear();
+		peselTextField.clear();
+		femaleCheck.setSelected(false);
+		maleCheck.setSelected(false);
+		insuranceType.getSelectionModel().selectFirst();
+		error.setText("");
+	}
+	private void clearExamGrid(){
+		calendar.setValue(null);
+		bilirubinLevel.clear();
+		checkHBS.setSelected(false);
+		checkHCV.setSelected(false);
+	}
 	/**
 	 * Funkcja do obslugi przycisku "Zapisz" w panelu danych pacjenta
 	 * @param femaleCheck
@@ -229,39 +295,31 @@ public class UserApplication extends Application {
 		String insurance = "";
 		boolean response = true;
 		
-		if(femaleCheck.isSelected())
-		{
+		if(femaleCheck.isSelected()){
 			sex = "K";
 		}
-		else if(maleCheck.isSelected())
-		{
+		else if(maleCheck.isSelected()){
 			sex = "M";
 		}
-		else
-		{
+		else{
 			sex = null;
 		}   
 	  
-		String value = insuranceType.getValue();
-			
-		if(value.equals("NFZ"))
-		{
+		String value = insuranceType.getValue();	
+		if(value.equals("NFZ")){
 			insurance = "NFZ";
 		}
-		else if(value.equals("Prywatne"))
-		{
+		else if(value.equals("Prywatne")){
 			insurance = "Prywatne";
 		}
-		else
-		{
+		else{
 			insurance = "Brak";
 		}
-			
-		   response = controller.saveUser(name, surname, pesel, sex, insurance);	   
+	    response = controller.saveUser(name, surname, pesel, sex, insurance);	   
 		  
 	   if(!response)
 	   {
-		   error.setText("BÅ‚Ä…d !");
+		   error.setText("B³¹d !");
 		   error.setTextFill(Color.RED);
 	   }
 	   else
@@ -288,7 +346,10 @@ public class UserApplication extends Application {
 	{
 		@SuppressWarnings("rawtypes")
 		TableColumn examinationColumn = new TableColumn("Badanie");
-		
+	/**
+	 * Callback to interfejs z dwoma typami generycznymi - typem, z ktorym wywolywana jest
+	 * funcja call i typem, ktory zwraca funkcja call	
+	 */
 		examinationColumn.setCellValueFactory(new Callback<CellDataFeatures<UserData, CheckBox>, ObservableValue<CheckBox>>() 
 		{
 			
@@ -300,15 +361,13 @@ public class UserApplication extends Application {
                  checkBox.setDisable(true);
                  
                  UserData userData = arg0.getValue();
-                 
-                 for (int i = 0; i < Model.userObservableList.size(); i++)
-                 {
+       
                      if(userData.isExamination())
                      {
                          checkBox.selectedProperty().setValue(Boolean.TRUE);
                      }
                
-                 }
+               
 
                  return new SimpleObjectProperty<CheckBox>(checkBox);
         		}        
@@ -316,11 +375,11 @@ public class UserApplication extends Application {
 		
 		model.deserializeData();
 		
-		TableColumn<UserData, String> fullNameColumn = new TableColumn<>("ImiÃª i nazwisko");
+		TableColumn<UserData, String> fullNameColumn = new TableColumn<>("Imiê i nazwisko");
 		fullNameColumn.setMinWidth(200);
 		fullNameColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("fullName"));
 		
-		TableColumn<UserData, String> sexColumn = new TableColumn<>("PÂ³eÃ¦");
+		TableColumn<UserData, String> sexColumn = new TableColumn<>("P³eæ");
 		sexColumn.setMinWidth(50);
 		sexColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("sex"));
 		
@@ -335,7 +394,7 @@ public class UserApplication extends Application {
         table.setItems(Model.userObservableList);
         Model.userObservableList.toString();
         table.getColumns().addAll(fullNameColumn, sexColumn, idColumn, insuranceColumn, examinationColumn );
-        table.setPrefHeight(100);
+        table.setPrefHeight(200);
         table.setTableMenuButtonVisible(true);
          
     }

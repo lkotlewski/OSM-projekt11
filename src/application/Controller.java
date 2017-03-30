@@ -1,5 +1,6 @@
 package application;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 public class Controller 
@@ -60,22 +61,26 @@ public class Controller
 	boolean saveUser(String name, String surname, String id, String sex, String insurance)
 	{
 		boolean info = true;
-		
 		if(!(isName(name) && isName(surname) && isInt(id) && model.checkId(id)&& id.length() == 11 && sex != null))
 		{
 			info = false;
-		
 		}
 		else
-		{
-			   
-		   model.saveInfo(name, surname, id, sex, insurance);
+		{  
+		   model.savePatientData(name, surname, id, sex, insurance);
 		}
-				
 		return info;
 	}
 	
-	
+	boolean saveExamResults(String bilirubinLevel, boolean antiBodiesHCV, boolean antigenHBS,
+			LocalDate examDate, int row)
+	{
+		boolean info = true;
+		model.saveExamData(Float.valueOf(bilirubinLevel), antiBodiesHCV, antigenHBS, examDate, 
+				Model.userObservableList.get(row).getId());
+		Model.userObservableList.get(row).setExamination(true);
+		return info;
+	}
 	
 	public static void main(String[] args) 
 	{
