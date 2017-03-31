@@ -1,8 +1,10 @@
 package application;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
@@ -51,7 +53,7 @@ public class UserApplication extends Application {
     ComboBox<String> insuranceType = new ComboBox<String>();
     Button saveButton = new Button("Zapisz");
     Button clearButton = new Button("Anuluj");
-    Label error = new Label("");
+    Label messageForm = new Label("");
     Label exam = new Label("Badanie");
     Label date = new Label("Data");
     DatePicker calendar =  new DatePicker();
@@ -64,6 +66,7 @@ public class UserApplication extends Application {
     Label unit = new Label("mg/dl");
     Button saveButtonExam = new Button("Zapisz");
     Button clearButtonExam = new Button("Anuluj");
+    Label messageExam = new Label("");
     
 	@Override
 	/*
@@ -131,7 +134,7 @@ public class UserApplication extends Application {
 	        formGrid.add(insuranceType, 3, 5, 2, 1);
 	        formGrid.add(saveButton, 0, 6);
 	        formGrid.add(clearButton, 1, 6);
-	        formGrid.add(error, 1, 7);
+	        formGrid.add(messageForm, 0, 7);
 	        
 	        femaleCheck.setToggleGroup(sexGroup);
 	        maleCheck.setToggleGroup(sexGroup);
@@ -144,7 +147,7 @@ public class UserApplication extends Application {
 			
 			examGrid.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
 					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-			examGrid.setMinSize(260, 200);
+			examGrid.setMinSize(260, 240);
 			examGrid.setPadding(new Insets(20, 20, 20 ,20));
 	        examGrid.setAlignment(Pos.TOP_CENTER);
 	        examGrid.setHgap(20);
@@ -153,6 +156,7 @@ public class UserApplication extends Application {
 	        examGrid.add(exam, 0, 0, 2, 1);
 	        examGrid.add(date, 0, 1, 2, 1);
 	        examGrid.add(calendar, 2, 1, 3, 1);
+	        calendar.setEditable(false);
 	        examGrid.add(antigenHBS, 0, 2, 2, 1);
 	        examGrid.add(checkHBS, 2, 2);
 	        examGrid.add(antiBodiesHCV, 0, 3, 2, 1);
@@ -163,6 +167,7 @@ public class UserApplication extends Application {
 	        examGrid.add(unit, 3, 4);
 	        examGrid.add(saveButtonExam, 0, 5);
 	        examGrid.add(clearButtonExam, 1, 5);
+	        examGrid.add(messageExam, 0, 6);
 	        examGrid.setDisable(true);
 	        
 	        leftLayout.setBottom(examGrid);
@@ -170,7 +175,7 @@ public class UserApplication extends Application {
 	        /**
 	         * ustawienia odnoszace sie do calego okna programu
 	         */
-	        Scene scene = new Scene(mainLayout, 1400, 600);
+	        Scene scene = new Scene(mainLayout, 1300, 620);
 			primaryStage.setTitle("Rejestracja wyników badañ");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -183,13 +188,13 @@ public class UserApplication extends Application {
 			menuItem.setOnAction(e->
 			{
 				primaryStage.close();
-				
+				model.serializeData();
 			});
 			
 			saveButton.setOnMouseClicked(e-> 
 			{
 				handleOptions(femaleCheck, maleCheck, insuranceType,
-				nameTextField, surnameTextField, peselTextField, error);
+				nameTextField, surnameTextField, peselTextField, messageForm);
 			});
 			
 			clearButton.setOnMouseClicked(e->
@@ -202,27 +207,9 @@ public class UserApplication extends Application {
 				examGrid.setDisable(false);
 				int selectedRow = table.getSelectionModel().getSelectedIndex();
 				UserData userData = Model.userObservableList.get(selectedRow);
-				nameTextField.setText(Model.userObservableList.get(selectedRow).getName());
-				surnameTextField.setText(userData.getSurname());
-				peselTextField.setText(userData.getId());
-				femaleCheck.setSelected(userData.getSex().equals("K"));
-                maleCheck.setSelected(userData.getSex().equals("M"));
-				
-				if(userData.getInsurance().equals("NFZ"))
-					insuranceType.getSelectionModel().selectFirst();
-				else if(userData.getInsurance().equals("Prywatne"))
-					insuranceType.getSelectionModel().select(1);
-				else if(userData.getInsurance().equals("Brak"))
-					insuranceType.getSelectionModel().select(2);
-				
+				getPatientView();
 				if(userData.isExamination()){
-					ExamData examData = Model.patientExamMap.get(userData.getId());
-					System.out.println(examData.getExamDate());
-					calendar.setValue(examData.getExamDate());
-					System.out.println(examData.isAntigenHBS());
-					checkHBS.setSelected(examData.isAntigenHBS());
-					checkHCV.setSelected(examData.isAntiBodiesHCV());
-					bilirubinLevel.setText(String.valueOf(examData.getBilirubinLevel()));
+					getExamView();
 				}
 				else{
 					clearExamGrid();
@@ -241,16 +228,34 @@ public class UserApplication extends Application {
 			});
 			
 			saveButtonExam.setOnMouseClicked(e->{
-				controller.saveExamResults(bilirubinLevel.getText(), checkHCV.isSelected(),
+				boolean response = controller.saveExamResults(bilirubinLevel.getText(), checkHCV.isSelected(),
 				checkHBS.isSelected(), calendar.getValue(),table.getSelectionModel().getSelectedIndex());
 				clearExamGrid();
+				
+				if(!response){
+					   messageExam.setText("B³¹d !");
+					   messageExam.setTextFill(Color.RED);
+					  
+				   }
+				else{
+					messageExam.setText("Zapisano");
+				    messageExam.setTextFill(Color.GREEN);
+			    }
+				
+			
 			});
 			
 			formGrid.setOnMouseClicked(e->
 			{
 				examGrid.setDisable(true);
 				table.getSelectionModel().select(null);
-				e.consume();
+			});
+			
+			deleteButton.setOnMouseClicked(e->
+			{
+				table.getSelectionModel().getSelectedIndex();
+				clearFormGrid();
+				clearExamGrid();
 			});
 			
 			primaryStage.setOnCloseRequest(e-> model.serializeData());
@@ -267,14 +272,46 @@ public class UserApplication extends Application {
 		femaleCheck.setSelected(false);
 		maleCheck.setSelected(false);
 		insuranceType.getSelectionModel().selectFirst();
-		error.setText("");
+		messageForm.setText("");
 	}
 	private void clearExamGrid(){
 		calendar.setValue(null);
 		bilirubinLevel.clear();
 		checkHBS.setSelected(false);
 		checkHCV.setSelected(false);
+		messageExam.setText("");
 	}
+	private void getPatientView(){
+		int selectedRow = table.getSelectionModel().getSelectedIndex();
+		UserData userData = Model.userObservableList.get(selectedRow);
+		nameTextField.setText(userData.getName());
+		surnameTextField.setText(userData.getSurname());
+		peselTextField.setText(userData.getId());
+		femaleCheck.setSelected(userData.getSex().equals("K"));
+        maleCheck.setSelected(userData.getSex().equals("M"));
+		
+		if(userData.getInsurance().equals("NFZ"))
+			insuranceType.getSelectionModel().selectFirst();
+		else if(userData.getInsurance().equals("Prywatne"))
+			insuranceType.getSelectionModel().select(1);
+		else if(userData.getInsurance().equals("Brak"))
+			insuranceType.getSelectionModel().select(2);
+		messageForm.setText("");
+	}
+	
+	private void getExamView(){
+		int selectedRow = table.getSelectionModel().getSelectedIndex();
+		UserData userData = Model.userObservableList.get(selectedRow);
+		ExamData examData = Model.patientExamMap.get(userData.getId());
+		System.out.println(examData.getExamDate());
+		calendar.setValue(examData.getExamDate());
+		System.out.println(examData.isAntigenHBS());
+		checkHBS.setSelected(examData.isAntigenHBS());
+		checkHCV.setSelected(examData.isAntiBodiesHCV());
+		bilirubinLevel.setText(String.valueOf(examData.getBilirubinLevel()));
+		messageExam.setText("");
+	}
+	
 	/**
 	 * Funkcja do obslugi przycisku "Zapisz" w panelu danych pacjenta
 	 * @param femaleCheck
@@ -399,6 +436,7 @@ public class UserApplication extends Application {
          
     }
 	
+     
 	public static void main(String[] args)
 	{
 		launch(args);

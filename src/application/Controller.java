@@ -50,6 +50,15 @@ public class Controller
 			return info;
 	}
 	
+	public boolean isFloat(String value){
+boolean info = true;
+		
+		if(!Pattern.matches("([0-9]*[.])?[0-9]+", value))
+			info = false;
+			
+			return info;
+	}
+	
 	/**
 	 * Funkcja sluzaca do zapisu uzytkownika, zwraca prawde gdy dane sa poprawnie wprowadzone
 	 * @param name
@@ -76,9 +85,14 @@ public class Controller
 			LocalDate examDate, int row)
 	{
 		boolean info = true;
+		if(examDate==null || !isFloat(bilirubinLevel)){
+			info = false;
+		}
+		else{
 		model.saveExamData(Float.valueOf(bilirubinLevel), antiBodiesHCV, antigenHBS, examDate, 
-				Model.userObservableList.get(row).getId());
+				          Model.userObservableList.get(row).getId());
 		Model.userObservableList.get(row).setExamination(true);
+		}
 		return info;
 	}
 	

@@ -61,8 +61,12 @@ public class Model
 	{
 		ExamData examData = new ExamData(bilirubinLevel,antiBodiesHCV,antigenHBS, examDate, id);
 		patientExamMap.put(id, examData); // jesli istnialo pole o takim kluczu zostanie nadpisane
-		System.out.println(patientExamMap.get(id));
 	}
+	
+	public void deletePatient(){
+		
+	}
+	
 	public void serializeData(){
 		try 
 		{
@@ -72,11 +76,8 @@ public class Model
 			{
 				UserData userData = userObservableList.get(i);
 				dataOutputStream.writeObject(userData);
-				System.out.println(userData.isExamination());
 				if(userData.isExamination()){
-					System.out.println("jestem w srodku" + userData.getId());
 					ExamData examData = patientExamMap.get(userData.getId());
-					System.out.println("bilirubina : " + examData.getBilirubinLevel());
 					examResultsOutputStream.writeObject(examData);
 				}
 				
@@ -115,7 +116,6 @@ public class Model
 				{
 					ExamData examData = (ExamData)examInputStream.readObject();
 					patientExamMap.put(examData.getId(), examData);
-					System.out.println(examData.getExamDate());
 					
 				}
 				catch(EOFException e)
