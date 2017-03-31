@@ -63,8 +63,13 @@ public class Model
 		patientExamMap.put(id, examData); // jesli istnialo pole o takim kluczu zostanie nadpisane
 	}
 	
-	public void deletePatient(){
+	public void deletePatient(int index){
 		
+		if(userObservableList.get(index).isExamination()){
+			patientExamMap.remove(userObservableList.get(index).getId());
+		}
+		userObservableList.remove(index);
+			
 	}
 	
 	public void serializeData(){
@@ -132,11 +137,7 @@ public class Model
 			//ex.printStackTrace();
 		}
 	}
-	
-	public void saveExamResults(float bilirubinLevel, boolean antiBodiesHCV, boolean antigenHBS, boolean firstResults){
-		
-	}
-	
+
 	
 	public static void main(String[] args) 
 	

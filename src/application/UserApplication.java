@@ -1,10 +1,8 @@
 package application;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
@@ -253,9 +251,10 @@ public class UserApplication extends Application {
 			
 			deleteButton.setOnMouseClicked(e->
 			{
-				table.getSelectionModel().getSelectedIndex();
+				int selectedIndex = table.getSelectionModel().getSelectedIndex();
 				clearFormGrid();
 				clearExamGrid();
+				model.deletePatient(selectedIndex);
 			});
 			
 			primaryStage.setOnCloseRequest(e-> model.serializeData());
