@@ -17,45 +17,76 @@ public class Model
 {
 	
 	/**
-	 * Nowy, statyczny obiekt typu ObservableList<UserData>
+	 * Statyczny obiekt typu ObservableList<UserData>
 	 */
 	public static ObservableList<UserData> userObservableList =  FXCollections.observableArrayList();
-    public static Map<String,ExamData> patientExamMap = new HashMap<String,ExamData>();
+	
+	
 	/**
-	 * Funkcja zwraca prawde, gdy w userObservableList nie ma podanego PESEL-uS
-	 * @param id
-	 * @return
+	 * Statyczny obiekt typu  Map<String,ExamData>
 	 */
-	public boolean checkId(String id)
+    public static Map<String,ExamData> patientExamMap = new HashMap<String,ExamData>();
+    
+   
+    /**
+     * Nazwa pliku do ktorego sa zapisywane dane uzytkownika
+     */
+    String nameOfUserDataFile = "Data.ser";
+    
+    
+    /**
+     * Nazwa pliku do ktorego sa zapisywane dane obadaniach uzytkownika
+     */
+    String nameOfExamDataFile = "ExamResults.ser";
+   
+    
+   /**
+    * Funkcja zapisujaca dane pacjenta, lub aktualizujaca juz istniejacego, gdy row = -1. W przypadku zmiany PESEL-u nastepuje rowniez aktualizacja w patientExamMap
+    * @param name
+    * @param surname
+    * @param id
+    * @param sex
+    * @param insurance
+    * @param row
+    */
+	public void savePatientData(String name, String surname, String id, String sex, String insurance, int row)
 	{
-		boolean info = true;
-		
-		for(int i = 0; i < userObservableList.size(); i++)
+		if(row == -1)
 		{
-			if(userObservableList.get(i).getId().equals(id))
+			UserData userData = new UserData(name, surname, id, sex, insurance, false);
+			userObservableList.add(userData);
+			
+		}
+		else
+		{
+			if(userObservableList.get(row).getExamination() && !userObservableList.get(row).getId().equals(id))
 			{
-				info = false;
+				ExamData examData = patientExamMap.get(userObservableList.get(row).getId());
+				examData.setId(id);
+				patientExamMap.remove(userObservableList.get(row).getId());
+				patientExamMap.put(id, examData);	
 			}
+			
+			userObservableList.get(row).setName(name);
+			userObservableList.get(row).setSurname(surname);
+			userObservableList.get(row).setFullName(name + " " + surname);
+			userObservableList.get(row).setId(id);
+			userObservableList.get(row).setSex(sex);
+			userObservableList.get(row).setInsurance(insurance);
+			
 		}
 		
-	return info;
-		
 	}
+	
 	
 	/**
-	 * Funkcja zapisujaca dane do userObservableList oraz zewnetrznego pliku Data.ser
-	 * @param name
-	 * @param surname
+	 * Funkcja zapisujaca dane badan uzytkownika
+	 * @param bilirubinLevel
+	 * @param antiBodiesHCV
+	 * @param antigenHBS
+	 * @param examDate
 	 * @param id
-	 * @param sex
-	 * @param insurance
 	 */
-	public void savePatientData(String name, String surname, String id, String sex, String insurance)
-	{
-		UserData userData = new UserData(name, surname, id, sex, insurance, false);
-		userObservableList.add(userData);
-	}
-	
 	public void saveExamData(float bilirubinLevel, boolean antiBodiesHCV, boolean antigenHBS, 
 			LocalDate examDate, String id)
 	{
@@ -63,25 +94,34 @@ public class Model
 		patientExamMap.put(id, examData); // jesli istnialo pole o takim kluczu zostanie nadpisane
 	}
 	
+	
+	/**
+	 * Funkcja usuwajaca uzytkownika i jesli istnieje to stowarzyszone z nim badania
+	 * @param index
+	 */
 	public void deletePatient(int index){
 		
-		if(userObservableList.get(index).isExamination()){
+		if(userObservableList.get(index).getExamination()){
 			patientExamMap.remove(userObservableList.get(index).getId());
 		}
 		userObservableList.remove(index);
 			
 	}
 	
+	/**
+	 * Funkcja serializujaca dane w plikach zewnetrznych
+	 */
 	public void serializeData(){
 		try 
 		{
-			ObjectOutputStream dataOutputStream = new ObjectOutputStream(new FileOutputStream("Data.ser"));	
-			ObjectOutputStream examResultsOutputStream = new ObjectOutputStream(new FileOutputStream("ExamResults.ser"));
+			ObjectOutputStream dataOutputStream = new ObjectOutputStream(new FileOutputStream(nameOfUserDataFile, false));	
+			ObjectOutputStream examResultsOutputStream = new ObjectOutputStream(new FileOutputStream(nameOfExamDataFile, false));
 			for(int i = 0; i < userObservableList.size(); i++)
 			{
 				UserData userData = userObservableList.get(i);
 				dataOutputStream.writeObject(userData);
-				if(userData.isExamination()){
+				if(userData.getExamination()){
+					
 					ExamData examData = patientExamMap.get(userData.getId());
 					examResultsOutputStream.writeObject(examData);
 				}
@@ -95,16 +135,18 @@ public class Model
 			ex.printStackTrace();
 		}
 	}
+	
+	
 	/**
-	 * Funkcja przeprowadza desrializacje danych z pliku Data.ser i wczytuje je do userObservableList
+	 * Funkcja przeprowadza desrializacje danych z plikow zewnetrznych
 	 */
 	public void deserializeData()
 	{
 
 		try 
 		{
-			ObjectInputStream dataInputStream = new ObjectInputStream(new FileInputStream("Data.ser"));	
-			ObjectInputStream examInputStream = new ObjectInputStream(new FileInputStream("ExamResults.ser"));
+			ObjectInputStream dataInputStream = new ObjectInputStream(new FileInputStream(nameOfUserDataFile));	
+			ObjectInputStream examInputStream = new ObjectInputStream(new FileInputStream(nameOfExamDataFile));
 			while(true)
 			{
 				try
@@ -128,14 +170,13 @@ public class Model
 					examInputStream.close();
 				}
 			}	
-			
-			
 						
 		}
 		catch (Exception ex) 
 		{
 			//ex.printStackTrace();
 		}
+		
 	}
 
 	
