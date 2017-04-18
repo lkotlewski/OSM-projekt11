@@ -14,17 +14,6 @@ public class UserData implements Serializable
 	private String insurance;
 	private boolean examination;
 	
-	private UserData() 
-	{
-		this.name = "";
-		this.surname = "";
-		this.fullName = "";
-		this.id = "0";
-		this.sex = "";
-		this.insurance = "";
-		this.examination = false;
-	}
-	
 	public UserData(String name, String surname, String id, String sex, String insurance, boolean examination)
 	{
 		this.name = name;
@@ -103,9 +92,4 @@ public class UserData implements Serializable
 				+ ", insurance=" + insurance + ", examination=" + examination + "]";
 	}
 
-	public static void main(String[] args) 
-	{
-		// TODO Auto-generated method stub
-
-	}
 }

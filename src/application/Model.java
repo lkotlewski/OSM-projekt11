@@ -9,7 +9,6 @@ import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -39,6 +38,74 @@ public class Model
      */
     String nameOfExamDataFile = "ExamResults.ser";
    
+    /**
+	 * Funkcja sluzaca do zapisu danych uzytkownika, zwraca prawde i zapisuje gdy dane sa poprawnie wprowadzone. Jesli row jest rowne -1 to dodawany jest 
+	 * nowy uzytkownik w przeciwnym razie nastepuje aktualizacja juz istniejacego uzytkownika. 
+	 * @param name
+	 * @param surname
+	 * @param id
+	 * @param sex
+	 * @param insurance
+	 */
+	public boolean saveUser(String name, String surname, String id, String sex, String insurance, int row)
+	{
+		boolean info = true;
+		
+		if(row == -1)
+		{
+			if(!(Tools.isName(name) && Tools.isName(surname) && Tools.isInt(id) && Tools.checkId(id)&& id.length() == 11 && sex != null))
+			{
+				info = false;
+			}
+			else
+			{  
+				savePatientData(name, surname, id, sex, insurance, row);
+			}
+		}
+		else
+		{
+			if(!(Tools.isName(name) && Tools.isName(surname) && Tools.isInt(id) && id.length() == 11 && sex != null))
+			{
+				info = false;
+			}
+			else
+			{  
+			   savePatientData(name, surname, id, sex, insurance, row);
+			}
+		}
+		
+		return info;
+	}
+
+	
+	/**
+	 * Funkcja sluzaca do zapisu badan uzytkownika, zwraca prawde i zapisuje dane gdy zostaly one poprawnie wprowadzone
+	 * @param bilirubinLevel
+	 * @param antiBodiesHCV
+	 * @param antigenHBS
+	 * @param examDate
+	 * @param row
+	 * @return
+	 */
+	public static boolean saveExamResults(String bilirubinLevel, boolean antiBodiesHCV, boolean antigenHBS,
+			LocalDate examDate, int row)
+	{
+		
+		boolean info = true;
+		
+		if(examDate == null || !Tools.isFloat(bilirubinLevel))
+		{
+			info = false;
+		}
+		else
+		{
+			saveExamData(Float.valueOf(bilirubinLevel), antiBodiesHCV, antigenHBS, examDate, userObservableList.get(row).getId());
+			userObservableList.get(row).setExamination(true);
+		}
+		
+		return info;
+	}
+	
     
    /**
     * Funkcja zapisujaca dane pacjenta, lub aktualizujaca juz istniejacego, gdy row = -1. W przypadku zmiany PESEL-u nastepuje rowniez aktualizacja w patientExamMap
@@ -51,6 +118,7 @@ public class Model
     */
 	public void savePatientData(String name, String surname, String id, String sex, String insurance, int row)
 	{
+
 		if(row == -1)
 		{
 			UserData userData = new UserData(name, surname, id, sex, insurance, false);
@@ -87,7 +155,7 @@ public class Model
 	 * @param examDate
 	 * @param id
 	 */
-	public void saveExamData(float bilirubinLevel, boolean antiBodiesHCV, boolean antigenHBS, 
+	public static void saveExamData(float bilirubinLevel, boolean antiBodiesHCV, boolean antigenHBS, 
 			LocalDate examDate, String id)
 	{
 		ExamData examData = new ExamData(bilirubinLevel,antiBodiesHCV,antigenHBS, examDate, id);
