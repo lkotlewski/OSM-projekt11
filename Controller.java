@@ -1,7 +1,6 @@
 package application;
 
-import java.time.LocalDate;
-import java.util.regex.Pattern;
+import javafx.collections.ObservableList;
 
 public class Controller 
 {
@@ -10,151 +9,125 @@ public class Controller
 	 * Nowy obiekt klasy Model
 	 */
 	Model model = new Model();
+	UserApplication userApplication;
 	
-	/**
-	 * Funkcja zwraca prawde, gdy string jest liczba calkowita
-	 * @param string
-	 * @return
-	 */
-	private boolean isInt(String string) 
+	
+	public Controller(UserApplication userApplication) {
+		super();
+		this.userApplication = userApplication;
+	}
+
+	public void saveButtonExamFunction()
 	{
-		boolean info = true;
-		
-		try
-		{
-			
-		Long.parseLong(string);
-		
-		}
-		catch(NumberFormatException e)
-		{
-			info = false;
-		}
-		
-		return info;
+		FormExamData formExamData = userApplication.getExam();
+		int selectedIndex = userApplication.getSelectedIndex();
+		boolean response = Model.saveExamResults(formExamData.getBilirubinLevel(),  formExamData.isAntiBodiesHCV(),
+				formExamData.isAntigenHBS(), formExamData.getExamDate(), selectedIndex);
+				
+				if(!response)
+				{
+					userApplication.ExamSaveError();	  
+				}
+				else
+				{
+					userApplication.clearExamGrid();
+					userApplication.DisableForms(true);
+					userApplication.ExamSaved();					
+			    }
 	}
 	
-	
-	/**
-	 * Zwraca prawde gdy string zawiera tylko duze i male litery
-	 * @param value
-	 * @return
-	 */
-	public boolean isName(String value)
+	public void menuItemFunction()
 	{
-		boolean info = true;
-		
-		if(!Pattern.matches("[A-Za-zøüÊÒÛ≥ÍπúØè∆•å £”—]*", value))
-			info = false;
-			
-			return info;
+		model.serializeData();
 	}
 	
 	/**
-	 * Funkcja zracajaca prawde gdy string jest liczba zmiennaprzecinkowa
-	 * @param value
-	 * @return
-	 */
-	public boolean isFloat(String value)
-	{
-		boolean info = true;
-		
-		if(!Pattern.matches("([0-9]*[.])?[0-9]+", value))
-			info = false;
-			
-			return info;
-	}
-	
-	/**
-	 * Funkcja sprawdzajaca czy istnieje juz podany PESEL
-	 * @param id
-	 * @return
-	 */
-	public boolean checkId(String id)
-	{
-		boolean info = true;
-		
-		for(int i = 0; i < Model.userObservableList.size(); i++)
-		{
-			if(Model.userObservableList.get(i).getId().equals(id))
-			{
-				info = false;
-			}
-		}
-		
-	return info;
-		
-	}
-	
-	
-	/**
-	 * Funkcja sluzaca do zapisu danych uzytkownika, zwraca prawde i zapisuje gdy dane sa poprawnie wprowadzone. Jesli row jest rowne -1 to dodawany jest 
-	 * nowy uzytkownik w przeciwnym razie nastepuje aktualizacja juz istniejacego uzytkownika. 
+	 * Funkcja do obslugi przycisku "Zapisz" w panelu danych pacjenta
+	 * @param femaleCheck
+	 * @param maleCheck
+	 * @param insuranceType
 	 * @param name
 	 * @param surname
-	 * @param id
-	 * @param sex
-	 * @param insurance
+	 * @param pesel
 	 */
-	boolean saveUser(String name, String surname, String id, String sex, String insurance, int row)
+	public void saveButtonFunctions()
 	{
-		boolean info = true;
+	   FormUserData formUserData = userApplication.getPatient();
+	   int selectedIndex =  userApplication.getSelectedIndex();
+	   boolean response = true;
 		
-		
-		if(row == -1)
+	   boolean isButtonAddPressed = userApplication.isButtonAddPressed();
+	   if(isButtonAddPressed){
+		   response = model.saveUser(formUserData.getName(), formUserData.getSurname(), 
+				   formUserData.getId(), formUserData.getSex(), formUserData.getInsurance(), -1);	
+		   userApplication.setButtonAddPressed(false);
+	   }
+	   else if(!userApplication.isButtonAddPressed() && selectedIndex != -1){
+		   response = model.saveUser(formUserData.getName(), formUserData.getSurname(), 
+				   formUserData.getId(), formUserData.getSex(), formUserData.getInsurance(), selectedIndex);
+		   userApplication.setButtonAddPressed(false);
+	   }
+		  
+	   if(!response){
+		   userApplication.PatientSaveError();
+		   
+	   }
+	   else{
+		   userApplication.clearFormGrid();
+		   userApplication.DisableForms(true);
+		   userApplication.PatientSaved();
+	   }
+	    	
+	}
+	/**
+	 * funkcja zarzadzajaca wydarzeniami zwiazanymi z tablicπ
+	 */
+	public void actionTable()
+	{
+		if (userApplication.getSelectedIndex() == -1)
+				return;
+		userApplication.DisableForms(false);
+		int selectedRow = userApplication.getSelectedIndex();
+		UserData userData = Model.userObservableList.get(selectedRow);
+		userApplication.setPatientView(userData);
+		if(userData.getExamination())
 		{
-			if(!(isName(name) && isName(surname) && isInt(id) && checkId(id)&& id.length() == 11 && sex != null))
-			{
-				info = false;
-			}
-			else
-			{  
-				model.savePatientData(name, surname, id, sex, insurance, row);
-			}
+			ExamData examData = Model.patientExamMap.get(userData.getId());
+			userApplication.setExamView(examData);
 		}
 		else
 		{
-			if(!(isName(name) && isName(surname) && isInt(id) && id.length() == 11 && sex != null))
-			{
-				info = false;
-			}
-			else
-			{  
-			   model.savePatientData(name, surname, id, sex, insurance, row);
-			}
+			userApplication.clearExamGrid();
 		}
-		
-		return info;
 	}
 	
+	public void deleteButtonFunction()
+	{
+		int selectedIndex = userApplication.getSelectedIndex();
+		model.deletePatient(selectedIndex);
+		userApplication.clearFormGrid();
+		userApplication.clearExamGrid();
+		userApplication.DisableForms(true);
+
+	}
+	
+	public void primaryStageClose()
+	{
+		model.serializeData();
+	}
+		
+
 	/**
-	 * Funkcja sluzaca do zapisu badan uzytkownika, zwraca prawde i zapisuje dane gdy zostaly one poprawnie wprowadzone
-	 * @param bilirubinLevel
-	 * @param antiBodiesHCV
-	 * @param antigenHBS
-	 * @param examDate
-	 * @param row
+	 * Funkcja zwracajaca listÍ z danymi pacjentow
 	 * @return
 	 */
-	boolean saveExamResults(String bilirubinLevel, boolean antiBodiesHCV, boolean antigenHBS,
-			LocalDate examDate, int row)
+	ObservableList<UserData> getPatientData()
 	{
-		boolean info = true;
-		
-		if(examDate == null || !isFloat(bilirubinLevel))
-		{
-			info = false;
-		}
-		else
-		{
-			model.saveExamData(Float.valueOf(bilirubinLevel), antiBodiesHCV, antigenHBS, examDate, 
-					          Model.userObservableList.get(row).getId());
-			Model.userObservableList.get(row).setExamination(true);
-		}
-		
-		return info;
+		model.deserializeData();
+		return Model.userObservableList;
 	}
 	
+
 	public static void main(String[] args) 
 	{
 		

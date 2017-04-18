@@ -6,7 +6,6 @@ public class UserData implements Serializable
 {
 
 	private static final long serialVersionUID = 1L;
-
 	private String name;
 	private String surname;
 	private String fullName;
@@ -14,17 +13,6 @@ public class UserData implements Serializable
 	private String sex;
 	private String insurance;
 	private boolean examination;
-	
-	private UserData() 
-	{
-		this.name = "";
-		this.surname = "";
-		this.fullName = "";
-		this.id = "0";
-		this.sex = "";
-		this.insurance = "";
-		this.examination = false;
-	}
 	
 	public UserData(String name, String surname, String id, String sex, String insurance, boolean examination)
 	{
@@ -86,7 +74,7 @@ public class UserData implements Serializable
 		this.insurance = insurance;
 	}
 
-	public boolean isExamination() {
+	public boolean getExamination() {
 		return examination;
 	}
 
@@ -104,9 +92,4 @@ public class UserData implements Serializable
 				+ ", insurance=" + insurance + ", examination=" + examination + "]";
 	}
 
-	public static void main(String[] args) 
-	{
-		// TODO Auto-generated method stub
-
-	}
 }

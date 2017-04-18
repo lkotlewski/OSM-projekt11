@@ -1,9 +1,11 @@
 package application;
 
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ExamData implements Serializable {
+public class ExamData implements Serializable 
+{
 	private static final long serialVersionUID = 1L;
 	float bilirubinLevel;
 	boolean antiBodiesHCV;
@@ -12,7 +14,8 @@ public class ExamData implements Serializable {
 	String id;
 	
 
-	public ExamData(float bilirubinLevel, boolean antiBodiesHCV, boolean antigenHBS, LocalDate examDate, String iD) {
+	public ExamData(float bilirubinLevel, boolean antiBodiesHCV, boolean antigenHBS, LocalDate examDate, String iD)
+	{
 		super();
 		this.bilirubinLevel = bilirubinLevel;
 		this.antiBodiesHCV = antiBodiesHCV;
@@ -20,38 +23,59 @@ public class ExamData implements Serializable {
 		this.examDate = examDate;
 		id = iD;
 	}
-	public float getBilirubinLevel() {
+	
+	public float getBilirubinLevel()
+	{
 		return bilirubinLevel;
 	}
-	public void setBilirubinLevel(float bilirubinLevel) {
+	
+	public void setBilirubinLevel(float bilirubinLevel)
+	{
 		this.bilirubinLevel = bilirubinLevel;
 	}
-	public boolean isAntiBodiesHCV() {
+	
+	public boolean isAntiBodiesHCV()
+	{
 		return antiBodiesHCV;
 	}
-	public void setAntiBodiesHCV(boolean antiBodiesHCV) {
+	
+	public void setAntiBodiesHCV(boolean antiBodiesHCV) 
+	{
 		this.antiBodiesHCV = antiBodiesHCV;
 	}
-	public boolean isAntigenHBS() {
+	
+	public boolean isAntigenHBS()
+	{
 		return antigenHBS;
 	}
-	public void setAntigenHBS(boolean antigenHBS) {
+	
+	public void setAntigenHBS(boolean antigenHBS) 
+	{
 		this.antigenHBS = antigenHBS;
 	}
-	public LocalDate getExamDate() {
+	
+	public LocalDate getExamDate() 
+	{
 		return examDate;
 	}
-	public void setExamDate(LocalDate examDate) {
+	
+	public void setExamDate(LocalDate examDate) 
+	{
 		this.examDate = examDate;
 	}
-	public String getId() {
+	
+	public String getId() 
+	{
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(String id)
+	{
 		this.id = id;
 	}
+	
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		return "ExamData [bilirubinLevel=" + bilirubinLevel + ", antiBodiesHCV=" + antiBodiesHCV + ", antigenHBS="
 				+ antigenHBS + ", examDate=" + examDate.toString() + ", Id=" + id +"]";
 	}
