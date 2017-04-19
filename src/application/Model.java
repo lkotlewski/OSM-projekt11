@@ -216,7 +216,6 @@ public class Model
 		try 
 		{
 			ObjectInputStream dataInputStream = new ObjectInputStream(new FileInputStream(nameOfUserDataFile));	
-			ObjectInputStream examInputStream = new ObjectInputStream(new FileInputStream(nameOfExamDataFile));
 			while(true)
 			{
 				try
@@ -228,6 +227,20 @@ public class Model
 				{
 					dataInputStream.close();
 				}
+			}	
+						
+		}
+		catch (Exception ex) 
+		{
+			//ex.printStackTrace();
+		}
+		
+		
+		try 
+		{
+			ObjectInputStream examInputStream = new ObjectInputStream(new FileInputStream(nameOfExamDataFile));
+			while(true)
+			{
 				
 				try
 				{
@@ -247,5 +260,7 @@ public class Model
 			//ex.printStackTrace();
 		}
 	}
+	
+	
 
 }
