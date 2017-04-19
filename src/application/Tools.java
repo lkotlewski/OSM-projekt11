@@ -30,7 +30,7 @@ public class Tools
 	
 	
 	/**
-	 * Zwraca prawde gdy string zawiera tylko duze i male litery
+	 * Funkcja zwraca prawde gdy string zawiera tylko duze i male litery
 	 * @param value
 	 * @return
 	 */
@@ -60,7 +60,7 @@ public class Tools
 	}
 	
 	/**
-	 * Funkcja sprawdzajaca czy istnieje juz podany PESEL
+	 * Funkcja zwracajaca prawde, gdy nie istnieje podany PESEL w bazie
 	 * @param id
 	 * @return
 	 */
@@ -73,6 +73,7 @@ public class Tools
 			if(Model.userObservableList.get(i).getId().equals(id))
 			{
 				info = false;
+				break;
 			}
 		}
 		
@@ -80,11 +81,4 @@ public class Tools
 		
 	}
 	
-
-	public static void main(String[] args) 
-	{
-		// TODO Auto-generated method stub
-
-	}
-
 }

@@ -1,6 +1,5 @@
 package application;
 
-
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,13 +15,13 @@ public class Model
 {
 	
 	/**
-	 * Statyczny obiekt typu ObservableList<UserData>
+	 * Statyczny obiekt typu ObservableList
 	 */
 	public static ObservableList<UserData> userObservableList =  FXCollections.observableArrayList();
 	
 	
 	/**
-	 * Statyczny obiekt typu  Map<String,ExamData>
+	 * Statyczny obiekt typu Map
 	 */
     public static Map<String,ExamData> patientExamMap = new HashMap<String,ExamData>();
     
@@ -34,19 +33,21 @@ public class Model
     
     
     /**
-     * Nazwa pliku do ktorego sa zapisywane dane obadaniach uzytkownika
+     * Nazwa pliku do ktorego sa zapisywane dane o badaniach uzytkownika
      */
     String nameOfExamDataFile = "ExamResults.ser";
    
-    /**
-	 * Funkcja sluzaca do zapisu danych uzytkownika, zwraca prawde i zapisuje gdy dane sa poprawnie wprowadzone. Jesli row jest rowne -1 to dodawany jest 
-	 * nowy uzytkownik w przeciwnym razie nastepuje aktualizacja juz istniejacego uzytkownika. 
-	 * @param name
-	 * @param surname
-	 * @param id
-	 * @param sex
-	 * @param insurance
-	 */
+   /**
+    * Funkcja sluzaca do zapisu danych uzytkownika, zwraca prawde i zapisuje gdy dane sa poprawnie wprowadzone. Jesli row jest rowne -1 to dodawany jest 
+	* nowy uzytkownik w przeciwnym razie nastepuje aktualizacja juz istniejacego uzytkownika. 
+    * @param name
+    * @param surname
+    * @param id
+    * @param sex
+    * @param insurance
+    * @param row
+    * @return
+    */
 	public boolean saveUser(String name, String surname, String id, String sex, String insurance, int row)
 	{
 		boolean info = true;
@@ -108,7 +109,8 @@ public class Model
 	
     
    /**
-    * Funkcja zapisujaca dane pacjenta, lub aktualizujaca juz istniejacego, gdy row = -1. W przypadku zmiany PESEL-u nastepuje rowniez aktualizacja w patientExamMap
+    * Funkcja zapisujaca dane pacjenta do kontenera, lub aktualizujaca juz istniejacego, gdy row = -1. 
+    * W przypadku zmiany PESEL-u nastepuje rowniez aktualizacja w patientExamMap
     * @param name
     * @param surname
     * @param id
@@ -148,7 +150,7 @@ public class Model
 	
 	
 	/**
-	 * Funkcja zapisujaca dane badan uzytkownika
+	 * Funkcja zapisujaca dane badan uzytkownika do kontenera
 	 * @param bilirubinLevel
 	 * @param antiBodiesHCV
 	 * @param antigenHBS
@@ -164,7 +166,7 @@ public class Model
 	
 	
 	/**
-	 * Funkcja usuwajaca uzytkownika i jesli istnieje to stowarzyszone z nim badania
+	 * Funkcja usuwajaca uzytkownika i jesli istnieja to stowarzyszone z nim badania
 	 * @param index
 	 */
 	public void deletePatient(int index){
@@ -244,16 +246,6 @@ public class Model
 		{
 			//ex.printStackTrace();
 		}
-		
 	}
-
-	
-	public static void main(String[] args) 
-	
-	{
-
-		
-	}
-
 
 }

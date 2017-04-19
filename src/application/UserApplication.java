@@ -1,7 +1,6 @@
 package application;
 
 import java.time.LocalDate;
-
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -20,74 +19,244 @@ import javafx.scene.text.Text;
 
 public class UserApplication extends Application
 {
-    int num;
+	/**
+	 * Obiekt klasy Controller
+	 */
 	Controller controller = new Controller(this);
-	Model model = new Model();
 	
+	/**
+	 * Obiekt typu Menu
+	 */
     Menu menu = new Menu("Aplikacja");
+    
+    /**
+     * Obiekt typu MenuBar
+     */
     MenuBar menuBar = new MenuBar();
-	MenuItem menuItem = new MenuItem("Wyjœcie");
+    
+    /**
+     * Obiekt typu MenuItem
+     */
+	MenuItem menuItem = new MenuItem("WyjÅ›cie");
+	
+	/**
+	 * Obiekt typu TableView przechowujacy informacje o uzytkownikach
+	 */
     TableView<UserData> table  = new TableView<UserData>();
+    
+    /**
+     * Obiekt typu BorderPane, glowny typ rozlozenia grafiki 
+     */
     BorderPane mainLayout = new BorderPane();
-    BorderPane rightLayout = new BorderPane(); // opakowanie na tablice z danymi
-    BorderPane leftLayout = new BorderPane(); // Opakowanie na dwa formularze do wprowadzania danych
-    GridPane formGrid = new GridPane();    // Czesc odpowiedzialna za formularz z danymi
+    
+    /**
+     * Obiekt typu BorderPane, glowny typ rozlozenia grafiki po prawej stronie okienka (tablica z danymi)
+     */
+    BorderPane rightLayout = new BorderPane();
+    
+    /**
+     * Obiekt typu BorderPane, glowny typ rozlozenia grafiki po lewej stronie okienka (opakowanie na formularze do wprowadzania danych)
+     */
+    BorderPane leftLayout = new BorderPane();
+    
+    /**
+     * Obiekt typu GridPane, odpowiedzialny za formularz z danymi pacjenta
+     */
+    GridPane formGrid = new GridPane();
+    
+    /**
+     * Obiekt typu GridPane, odpowiedzialny za formularz z danymi o badaniach
+     */
     GridPane examGrid = new GridPane();
-    FlowPane rightBox = new FlowPane(); // prawa czesc okna, wzgledem, ktorej wyznaczane sa marginesy
+    
+    /**
+     * Obiekt typu FlowPane,  prawa czesc okna, wzgledem, ktorej wyznaczane sa marginesy
+     */
+    FlowPane rightBox = new FlowPane(); 
+    
+    /**
+     * Obiekt typu scrollPane, sluzacy do obslugi tablicy
+     */
     ScrollPane scrollCont = new ScrollPane();
-    Label patientDataLabel = new Label("Dane Pacjentów");
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o danych pacjentow
+     */
+    Label patientDataLabel = new Label("Dane PacjentÃ³w");
+    
+    /**
+     * Obiekt typu Button, sluzacy do aktywacji dodawania nowego uzytkownika
+     */
 	Button addButton = new Button("Dodaj");
-    Button deleteButton = new Button("Usuñ");
+	
+	/**
+	 * Obiekt typu Button, sluzacy do usuwania pacjenta
+	 */
+    Button deleteButton = new Button("UsuÅ„");
+    
+    /**
+     * Obiekt typu Text, wyswietlajacy napis o danych pacjenta
+     */
     Text formTitle = new Text("Dane Pacjenta");
-    Label nameLabel = new Label("Imiê:");
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o imieniu
+     */
+    Label nameLabel = new Label("ImiÄ™:");
+    
+    /**
+     * Obiekt typu TextField, sluzacy do pobierania imienia
+     */
     TextField nameTextField = new TextField();
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o nazwisku
+     */
     Label surnameLabel = new Label("Nazwisko:");
+    
+    /**
+     * Obiekt typu TextField, sluzacy do pobierania nazwiska
+     */
     TextField surnameTextField = new TextField();
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o imieniu
+     */
     Label peselLabel = new Label("PESEL:");
+    
+    /**
+     * Obiekt typu TextField, sluzacy do pobierania PESEL-u
+     */
     TextField peselTextField = new TextField();
-    Label sexLabel = new Label("P³eæ:");
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o Plci
+     */
+    Label sexLabel = new Label("PÅ‚eÄ‡:");
+    
+    /**
+     * Obiekt typu RadioButton, sluzacy do wyboru Kobiety
+     */
     RadioButton femaleCheck = new RadioButton("Kobieta");
-    RadioButton maleCheck = new RadioButton("Mê¿czyzna");
+    
+    /**
+     * Obiekt typu RadioButton, sluzacy do wyboru Mezszczyzny 
+     */
+    RadioButton maleCheck = new RadioButton("MÄ™Å¼czyzna");
+    
+    /**
+     * Obiekt typu ToggleGroup, sluzacy do grupowania przyciskow femaleCheck i maleCheck
+     */
     ToggleGroup sexGroup = new ToggleGroup();
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o Ubezpieczeniu 
+     */
     Label insuranceLabel = new Label("Ubezpieczenie");
+    
+    /**
+     * Obiekt typu ComboBox, bedacy opakowaniem na typy ubezpieczen
+     */
     ComboBox<String> insuranceType = new ComboBox<String>();
+    
+    /**
+     * Obiekt typu Button, sluzacy do zapisywania informacji o uzytkowniku
+     */
     Button saveButton = new Button("Zapisz");
+    
+    /**
+     * Obiekt typu Button, sluzacy do czyszczenia wypelnionych pol z danymi uzytkownika w formatce
+     */
     Button clearButton = new Button("Anuluj");
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy informacje zwrotna
+     */
     Label messageFormLabel = new Label("");
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o badaniu
+     */
     Label examLabel = new Label("Badanie");
+    
+    /**
+     * Obiekty typu Label, wyswietlajacy napis o dacie
+     */
     Label dateLabel = new Label("Data");
+    
+    /**
+     * Obiekt typu DatePicker, sluzacy jako kalendarz
+     */
     DatePicker calendar =  new DatePicker();
+    
+    /**
+     * Obiekty typu Label, wyswietlajacy napis o antygenie HBS
+     */
     Label antigenHBSLabel = new Label("Antygen HBS");
+    
+    /**
+     * Obiekt typu CheckBox, sluzacy do ustawiania informacji o antygenie HBS
+     */
     CheckBox checkHBS = new CheckBox();
-    Label antiBodiesHCV = new Label("Przeciwcia³a HCV");
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o przeciwcialach HCV
+     */
+    Label antiBodiesHCV = new Label("PrzeciwciaÅ‚a HCV");
+    
+    /**
+     * Obiekt typu ChceckBox, sluzacy do ustawiania informacji o przciwcialach HCV
+     */
     CheckBox checkHCV = new CheckBox();
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o poziomie bilirubiny
+     */
     Label bilirubinLabel = new Label("Poziom Bilirubiny");
+    
+    /**
+     * Obiekt typu TextField, sluzacy do pobierania informacji o poziomie bilirubiny
+     */
     TextField bilirubinTextField = new TextField();
+    
+    /**
+     * Obiekt typu Label, wyswietlajacy napis o stezeniu bilirubiny
+     */
     Label unitLabel = new Label("mg/dl");
+    
+    /**
+     * Obiekt typu Button, sluzacy do zapisywania wynikow badan
+     */
     Button saveButtonExam = new Button("Zapisz");
+    
+    /**
+     * Obiekt typu Button, sluzacy do czyszczenia wynikow badan w formatce
+     */
     Button clearButtonExam = new Button("Anuluj");
+    
+    /**
+     * Obiekt typu Label, sluzacy do wyswietlania informacji zwrotnej
+     */
     Label messageExamLabel = new Label("");
+    
+    /**
+     * Zmienna typu boolean, sluzaca do informowania czy przycisk Dodaj zostal wcisniety 
+     */
     boolean isButtonAddPressed = false;
     
-	@Override
-	/*
-	 * (non-Javadoc)
-	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	/**
+	 * Przeciazona metoda start, sluzaca do wyswietlania okienka
 	 */
 	public void start(Stage primaryStage)
 	{
 		try 
 		{
-			/**
-			 * Gora
-			 */
+			//Gora
 		    menu.getItems().add(menuItem);
 			menuBar.getMenus().add(menu);
 			mainLayout.setTop(menuBar);
 		    
-			/**
-			 * Prawa strona
-			 */
+			//Prawa strona
 			rightLayout.setPadding(new Insets(20, 20, 20 ,20)); 
 			mainLayout.setRight(rightLayout);
 			
@@ -106,9 +275,7 @@ public class UserApplication extends Application
 	        rightBox.getChildren().add(addButton);
 	        rightBox.getChildren().add(deleteButton);
 			
-	        /**
-	         * Lewa strona
-	         */
+	        //Lewa strona
 			leftLayout.setMinSize(300,400);
 			leftLayout.setPadding(new Insets(20, 20, 20 ,20));
 			mainLayout.setLeft(leftLayout);
@@ -173,27 +340,23 @@ public class UserApplication extends Application
 	        examGrid.setDisable(true);
 	        leftLayout.setBottom(examGrid);
 	        
-	        /**
-	         * ustawienia odnoszace sie do calego okna programu
-	         */
+	        //ustawienia odnoszace sie do calego okna programu
 	        Scene scene = new Scene(mainLayout, 1300, 700);
-			primaryStage.setTitle("Rejestracja wyników badañ");
+			primaryStage.setTitle("Rejestracja wynikÃ³w badaÃ±");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			primaryStage.setResizable(false);
 			
-	        /**
-	         * Obsluga zdarzen z calego programu
-	         */
+	        //Obsluga zdarzen z calego programu
 			menuItem.setOnAction(e->
 			{
-				controller.menuItemFunction();
+				controller.primaryStageClose();
 				primaryStage.close();
 			});
 			
 			saveButton.setOnMouseClicked(e-> 
 			{
-				controller.saveButtonFunctions();
+				controller.saveButtonFunction();
 			});
 			
 			clearButton.setOnMouseClicked(e->
@@ -277,11 +440,11 @@ public class UserApplication extends Application
 		
 		ObservableList<UserData> userObservableList = controller.getPatientData();
 		
-		TableColumn<UserData, String> fullNameColumn = new TableColumn<>("Imiê i nazwisko");
+		TableColumn<UserData, String> fullNameColumn = new TableColumn<>("Imie i nazwisko");
 		fullNameColumn.setMinWidth(200);
 		fullNameColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("fullName"));
 		
-		TableColumn<UserData, String> sexColumn = new TableColumn<>("P³eæ");
+		TableColumn<UserData, String> sexColumn = new TableColumn<>("PÅ‚eÄ‡");
 		sexColumn.setMinWidth(50);
 		sexColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("sex"));
 		
@@ -321,11 +484,18 @@ public class UserApplication extends Application
 		messageFormLabel.setText("");
 	}
 	
+	/**
+	 * Funkcja zwracajaca wartosc zmiennej isButtonAddPressed
+	 * @return
+	 */
 	public boolean isButtonAddPressed() {
 		return isButtonAddPressed;
 	}
 
-
+	/**
+	 * Funkcja ustawiajaca wartosc zmiennej isButtonAddPressed
+	 * @param isButtonAddPressed
+	 */
 	public void setButtonAddPressed(boolean isButtonAddPressed) {
 		this.isButtonAddPressed = isButtonAddPressed;
 	}
@@ -373,7 +543,7 @@ public class UserApplication extends Application
 	}
 	
 	/**
-	 *Funkcja pobieraj¹ca wprowadzone dane pacjenta 
+	 *Funkcja pobierajaca wprowadzone dane pacjenta 
 	 */
 	public FormUserData getPatient(){
 		String name = nameTextField.getText();
@@ -396,7 +566,7 @@ public class UserApplication extends Application
 	}
 	
 	/**
-	 * Funkcja pobierajaca wprowadzone wyniki badañ
+	 * Funkcja pobierajaca wprowadzone wyniki badan
 	 */
 	public FormExamData getExam(){
 		String bilirubinLevel = bilirubinTextField.getText();
@@ -416,15 +586,15 @@ public class UserApplication extends Application
 	
 	/**
 	 * 
-	 * Funkcja powiadamiajaca o b³êdzie przy zapisie danych pacjenta
+	 * Funkcja powiadamiajaca o bledzie przy zapisie danych pacjenta
 	 */
 	public void PatientSaveError(){
-		messageFormLabel.setText("B³¹d !");
+		messageFormLabel.setText("BÅ‚Ä…d !");
 		messageFormLabel.setTextFill(Color.RED);
 	}
 	
 	/**
-	 * Funkcja powiadamiajaca o pomyœlnym zapisaniu pacjenta,
+	 * Funkcja powiadamiajaca o pomyslnym zapisaniu pacjenta,
 	 *  odswieza rowniez widok w tablicy 
 	 */
 	public void PatientSaved(){  
@@ -436,15 +606,15 @@ public class UserApplication extends Application
 	
 	/**
 	 * 
-	 * Funkcja powiadamiajaca o b³êdzie przy zapisie wynikow badan
+	 * Funkcja powiadamiajaca o bledzie przy zapisie wynikow badan
 	 */
 	public void ExamSaveError(){
-		messageExamLabel.setText("B³¹d !");
+		messageExamLabel.setText("BÅ‚Ä…d !");
 		messageExamLabel.setTextFill(Color.RED);
 	}
 	
 	/**
-	 * Funkcja powiadamiajaca o pomyœlnym zapisaniu wynikow badan,
+	 * Funkcja powiadamiajaca o pomyslnym zapisaniu wynikow badan,
 	 *  odswieza rowniez widok w tablicy 
 	 */
 	public void ExamSaved(){  
@@ -454,11 +624,19 @@ public class UserApplication extends Application
 		table.refresh(); 
 	}
 	
+	/**
+	 * Funkcja deaktywujaca formatki
+	 * @param value
+	 */
 	public void DisableForms(boolean value){
 		examGrid.setDisable(value);
 		formGrid.setDisable(value);
 	}
 	
+	/**
+	 * Funkcja main
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
 		launch(args);

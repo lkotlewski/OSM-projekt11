@@ -6,17 +6,27 @@ public class Controller
 {
 
 	/**
-	 * Nowy obiekt klasy Model
+	 * Obiekt klasy Model
 	 */
 	Model model = new Model();
+	
+	/**
+	 * Pole typu UserApplication
+	 */
 	UserApplication userApplication;
 	
-	
+	/**
+	 * Konstruktor klasy Controller
+	 * @param userApplication
+	 */
 	public Controller(UserApplication userApplication) {
 		super();
 		this.userApplication = userApplication;
 	}
-
+	
+	/**
+	 * Funkcja obslugujaca zapisywanie danych o badaniach
+	 */
 	public void saveButtonExamFunction()
 	{
 		FormExamData formExamData = userApplication.getExam();
@@ -36,51 +46,41 @@ public class Controller
 			    }
 	}
 	
-	public void menuItemFunction()
-	{
-		model.serializeData();
-	}
-	
 	/**
-	 * Funkcja do obslugi przycisku "Zapisz" w panelu danych pacjenta
-	 * @param femaleCheck
-	 * @param maleCheck
-	 * @param insuranceType
-	 * @param name
-	 * @param surname
-	 * @param pesel
+	 * Funkcja obslugujaca zapisywanie danych uzytkownika
 	 */
-	public void saveButtonFunctions()
+	public void saveButtonFunction()
 	{
 	   FormUserData formUserData = userApplication.getPatient();
 	   int selectedIndex =  userApplication.getSelectedIndex();
 	   boolean response = true;
 		
 	   boolean isButtonAddPressed = userApplication.isButtonAddPressed();
+	   
 	   if(isButtonAddPressed){
 		   response = model.saveUser(formUserData.getName(), formUserData.getSurname(), 
 				   formUserData.getId(), formUserData.getSex(), formUserData.getInsurance(), -1);	
-		   userApplication.setButtonAddPressed(false);
 	   }
 	   else if(!userApplication.isButtonAddPressed() && selectedIndex != -1){
 		   response = model.saveUser(formUserData.getName(), formUserData.getSurname(), 
 				   formUserData.getId(), formUserData.getSex(), formUserData.getInsurance(), selectedIndex);
-		   userApplication.setButtonAddPressed(false);
 	   }
-		  
+	   
 	   if(!response){
 		   userApplication.PatientSaveError();
 		   
 	   }
 	   else{
+		   userApplication.setButtonAddPressed(false);
 		   userApplication.clearFormGrid();
 		   userApplication.DisableForms(true);
 		   userApplication.PatientSaved();
 	   }
 	    	
 	}
+	
 	/**
-	 * funkcja zarzadzajaca wydarzeniami zwiazanymi z tablic¹
+	 * Funkcja zarzadzajaca wydarzeniami zwiazanymi z tablica
 	 */
 	public void actionTable()
 	{
@@ -101,6 +101,9 @@ public class Controller
 		}
 	}
 	
+	/**
+	 * Funkcja obslugujaca usuniecie pacjenta
+	 */
 	public void deleteButtonFunction()
 	{
 		int selectedIndex = userApplication.getSelectedIndex();
@@ -111,14 +114,16 @@ public class Controller
 
 	}
 	
+	/**
+	 * Funkcja obslugujaca wyjscie z programu
+	 */
 	public void primaryStageClose()
 	{
 		model.serializeData();
 	}
-		
 
 	/**
-	 * Funkcja zwracajaca listê z danymi pacjentow
+	 * Funkcja zwracajaca liste z danymi pacjentow
 	 * @return
 	 */
 	ObservableList<UserData> getPatientData()
@@ -127,10 +132,4 @@ public class Controller
 		return Model.userObservableList;
 	}
 	
-
-	public static void main(String[] args) 
-	{
-		
-	}
-
 }
