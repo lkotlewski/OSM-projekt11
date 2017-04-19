@@ -37,7 +37,7 @@ public class UserApplication extends Application
     /**
      * Obiekt typu MenuItem
      */
-	MenuItem menuItem = new MenuItem("WyjÅ›cie");
+	MenuItem menuItem = new MenuItem("Wyjœcie");
 	
 	/**
 	 * Obiekt typu TableView przechowujacy informacje o uzytkownikach
@@ -80,9 +80,9 @@ public class UserApplication extends Application
     ScrollPane scrollCont = new ScrollPane();
     
     /**
-     * Obiekt typu Label, wyswietlajacy napis o danych pacjentow
+     * Obiekt typu Text, wyswietlajacy tytulowy prawego panelu
      */
-    Label patientDataLabel = new Label("Dane PacjentÃ³w");
+    Text patientDataText = new Text("Dane Pacjentów");
     
     /**
      * Obiekt typu Button, sluzacy do aktywacji dodawania nowego uzytkownika
@@ -92,17 +92,17 @@ public class UserApplication extends Application
 	/**
 	 * Obiekt typu Button, sluzacy do usuwania pacjenta
 	 */
-    Button deleteButton = new Button("UsuÅ„");
+    Button deleteButton = new Button("Usuñ");
     
     /**
      * Obiekt typu Text, wyswietlajacy napis o danych pacjenta
      */
-    Text formTitle = new Text("Dane Pacjenta");
+    Text formTitleText = new Text("Dane Pacjenta");
     
     /**
      * Obiekt typu Label, wyswietlajacy napis o imieniu
      */
-    Label nameLabel = new Label("ImiÄ™:");
+    Label nameLabel = new Label("Imiê:");
     
     /**
      * Obiekt typu TextField, sluzacy do pobierania imienia
@@ -132,7 +132,7 @@ public class UserApplication extends Application
     /**
      * Obiekt typu Label, wyswietlajacy napis o Plci
      */
-    Label sexLabel = new Label("PÅ‚eÄ‡:");
+    Label sexLabel = new Label("P³eæ:");
     
     /**
      * Obiekt typu RadioButton, sluzacy do wyboru Kobiety
@@ -142,7 +142,7 @@ public class UserApplication extends Application
     /**
      * Obiekt typu RadioButton, sluzacy do wyboru Mezszczyzny 
      */
-    RadioButton maleCheck = new RadioButton("MÄ™Å¼czyzna");
+    RadioButton maleCheck = new RadioButton("Mê¿czyzna");
     
     /**
      * Obiekt typu ToggleGroup, sluzacy do grupowania przyciskow femaleCheck i maleCheck
@@ -175,9 +175,9 @@ public class UserApplication extends Application
     Label messageFormLabel = new Label("");
     
     /**
-     * Obiekt typu Label, wyswietlajacy napis o badaniu
+     * Obiekt typu Text, wyswietlajacy tytul panelu z wynikami badan
      */
-    Label examLabel = new Label("Badanie");
+    Text examText = new Text("Badanie");
     
     /**
      * Obiekty typu Label, wyswietlajacy napis o dacie
@@ -202,7 +202,7 @@ public class UserApplication extends Application
     /**
      * Obiekt typu Label, wyswietlajacy napis o przeciwcialach HCV
      */
-    Label antiBodiesHCV = new Label("PrzeciwciaÅ‚a HCV");
+    Label antiBodiesHCV = new Label("Przeciwcia³a HCV");
     
     /**
      * Obiekt typu ChceckBox, sluzacy do ustawiania informacji o przciwcialach HCV
@@ -261,13 +261,13 @@ public class UserApplication extends Application
 			mainLayout.setRight(rightLayout);
 			
 			rightBox.setPadding(new Insets(20, 20, 20 ,20));
-			rightBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+			rightBox.setBorder(new Border(new BorderStroke(Color.INDIGO, BorderStrokeStyle.SOLID,
 					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 			rightBox.setVgap(20);
 			rightBox.setHgap(20);
 			rightLayout.setCenter(rightBox);
 			
-			rightBox.getChildren().add(patientDataLabel);
+			rightBox.getChildren().add(patientDataText);
 			
 			createTable(table);
 			scrollCont.setContent(table);
@@ -280,7 +280,7 @@ public class UserApplication extends Application
 			leftLayout.setPadding(new Insets(20, 20, 20 ,20));
 			mainLayout.setLeft(leftLayout);
 		
-			formGrid.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+			formGrid.setBorder(new Border(new BorderStroke(Color.INDIGO, BorderStrokeStyle.SOLID,
 					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 			formGrid.setMinSize(260, 240);
 			formGrid.setPadding(new Insets(20, 20, 20 ,20));
@@ -288,7 +288,7 @@ public class UserApplication extends Application
 	        formGrid.setHgap(20);
 	        formGrid.setVgap(10);
 	        
-	        formGrid.add(formTitle, 0, 0, 2, 1);
+	        formGrid.add(formTitleText, 0, 0, 2, 1);
 	        formGrid.add(nameLabel, 0, 1, 2, 1);
 	        formGrid.add(nameTextField, 2, 1, 2, 1);
 	        formGrid.add(surnameLabel, 0, 2, 2, 1);
@@ -314,7 +314,7 @@ public class UserApplication extends Application
 			leftLayout.setTop(formGrid);
 			
 			
-			examGrid.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+			examGrid.setBorder(new Border(new BorderStroke(Color.INDIGO, BorderStrokeStyle.SOLID,
 					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 			examGrid.setMinSize(260, 240);
 			examGrid.setPadding(new Insets(20, 20, 20 ,20));
@@ -322,7 +322,7 @@ public class UserApplication extends Application
 	        examGrid.setHgap(20);
 	        examGrid.setVgap(10);
 	        
-	        examGrid.add(examLabel, 0, 0, 2, 1);
+	        examGrid.add(examText, 0, 0, 2, 1);
 	        examGrid.add(dateLabel, 0, 1, 2, 1);
 	        examGrid.add(calendar, 2, 1, 3, 1);
 	        calendar.setEditable(false);
@@ -341,13 +341,27 @@ public class UserApplication extends Application
 	        leftLayout.setBottom(examGrid);
 	        
 	        //ustawienia odnoszace sie do calego okna programu
-	        Scene scene = new Scene(mainLayout, 1300, 700);
-			primaryStage.setTitle("Rejestracja wynikÃ³w badaÃ±");
+	        Scene scene = new Scene(mainLayout, 1200, 640);
+			primaryStage.setTitle("Rejestracja wyników badañ");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			primaryStage.setResizable(false);
-			
-	        //Obsluga zdarzen z calego programu
+			/**
+			 * obs³uga CSS
+			 */
+			table.setId("table-view");
+			examGrid.getStyleClass().add("grid-pane");
+			formGrid.getStyleClass().add("grid-pane");
+			rightBox.getStyleClass().add("grid-pane");
+			examText.setId("examination-title");
+			patientDataText.setId("table-title");
+			formTitleText.setId("form-title");
+			messageExamLabel.setId("exam-message");
+			messageFormLabel.setId("form-message");
+			scene.getStylesheets().add (UserApplication.class.getResource("viewStyle.css").toExternalForm());
+			/**
+	         * Obsluga zdarzen z calego programu
+	         */
 			menuItem.setOnAction(e->
 			{
 				controller.primaryStageClose();
@@ -370,6 +384,7 @@ public class UserApplication extends Application
 			table.setOnMouseClicked(e->
 			{
 				controller.actionTable();
+				
 			});
 			
 			addButton.setOnMouseClicked(e->
@@ -444,7 +459,7 @@ public class UserApplication extends Application
 		fullNameColumn.setMinWidth(200);
 		fullNameColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("fullName"));
 		
-		TableColumn<UserData, String> sexColumn = new TableColumn<>("PÅ‚eÄ‡");
+		TableColumn<UserData, String> sexColumn = new TableColumn<>("P³eæ");
 		sexColumn.setMinWidth(50);
 		sexColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("sex"));
 		
@@ -458,7 +473,7 @@ public class UserApplication extends Application
 		
         table.setItems(userObservableList);
         table.getColumns().addAll(fullNameColumn, sexColumn, idColumn, insuranceColumn, examinationColumn );
-        table.setPrefHeight(200);
+        table.setPrefHeight(390);
         table.setTableMenuButtonVisible(true);
          
     }
@@ -589,7 +604,7 @@ public class UserApplication extends Application
 	 * Funkcja powiadamiajaca o bledzie przy zapisie danych pacjenta
 	 */
 	public void PatientSaveError(){
-		messageFormLabel.setText("BÅ‚Ä…d !");
+		messageFormLabel.setText("B³¹d !");
 		messageFormLabel.setTextFill(Color.RED);
 	}
 	
@@ -609,7 +624,7 @@ public class UserApplication extends Application
 	 * Funkcja powiadamiajaca o bledzie przy zapisie wynikow badan
 	 */
 	public void ExamSaveError(){
-		messageExamLabel.setText("BÅ‚Ä…d !");
+		messageExamLabel.setText("B³¹d !");
 		messageExamLabel.setTextFill(Color.RED);
 	}
 	

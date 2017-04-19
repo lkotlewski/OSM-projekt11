@@ -1,0 +1,66 @@
+.root {
+     -fx-background: rgb(186, 224, 211);
+
+}
+
+.menu-bar {
+	 -fx-background-color: rgb(216, 234, 221);
+}
+
+.grid-pane {
+	-fx-background-color: rgb(216, 234, 221);
+}
+
+.button {
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(rgb(151, 160, 191), rgb(171, 180, 211));
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.radio-button {
+	 -fx-font-weight: bold;
+}
+
+.label {
+	-fx-font-weight: bold;
+}
+
+#table-view {
+    -fx-base: rgb(171, 180, 211);
+    -fx-control-inner-background: rgb(230,250,250);
+    -fx-background-color: rgb(250,250,250);
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 2;
+}
+
+#table-title {
+	-fx-font-size: 18px;
+	-fx-fill: rgb(104, 84, 124);
+	-fx-font-weight: bold;
+}
+
+#examination-title {
+	-fx-font-size: 16px;
+	-fx-fill: rgb(104, 84, 124);
+	-fx-font-weight: bold;
+}
+
+#form-title {
+	-fx-font-size: 16px;
+	-fx-fill: rgb(104, 84, 124);
+	-fx-font-weight: bold;
+}
+
+
+
+#exam-message{
+	-fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgb(40, 155, 34);
+}
+
+#form-message{
+	-fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgb(40, 155, 34);
+}
