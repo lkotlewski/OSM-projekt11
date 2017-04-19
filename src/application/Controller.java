@@ -87,6 +87,7 @@ public class Controller
 		if (userApplication.getSelectedIndex() == -1)
 				return;
 		userApplication.DisableForms(false);
+		userApplication.setButtonAddPressed(false);
 		int selectedRow = userApplication.getSelectedIndex();
 		UserData userData = Model.userObservableList.get(selectedRow);
 		userApplication.setPatientView(userData);
